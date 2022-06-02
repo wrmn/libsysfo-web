@@ -6,7 +6,7 @@
     f7ready,
     App,
     Panel,
-    Views,
+    Button,
     View,
     Popup,
     Page,
@@ -28,6 +28,7 @@
 
   import routes from "../js/routes";
   import store from "../js/store";
+  import Dom7 from "dom7";
 
   const device = getDevice();
   // Framework7 Parameters
@@ -91,8 +92,10 @@
       <Page>
         <Navbar title="Menu">
           <NavRight>
-            <i class="icon f7-icons color-custom">sun_min</i>
-            <i class="icon f7-icons color-custom">moon</i>
+            <Button on:click={() => Dom7("body").toggleClass("dark")}>
+              <i id="well" class="icon f7-icons color-custom">sun_min</i>
+              <!-- moon -->
+            </Button>
           </NavRight>
         </Navbar>
         <BlockTitle>Left View Navigation</BlockTitle>

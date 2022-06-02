@@ -1,4 +1,6 @@
 <script>
+  import Dom7 from "dom7";
+
   import {
     Page,
     Navbar,
@@ -19,6 +21,8 @@
 </script>
 
 <Page name="home">
+  <div class="intro">Lorem ipsum...</div>
+
   <!-- Top Navbar -->
   <Navbar sliding={false}>
     <NavLeft>
