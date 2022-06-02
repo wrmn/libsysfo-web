@@ -28,7 +28,8 @@
 
   import routes from "../js/routes";
   import store from "../js/store";
-  import Dom7 from "dom7";
+
+  import { darkTheme } from "../stores/theme";
 
   const device = getDevice();
   // Framework7 Parameters
@@ -82,7 +83,26 @@
       // Call F7 APIs here
     });
   });
+  if (localStorage.getItem("theme") === "dark") {
+    darkTheme.set(true);
+  }
 </script>
+
+<svelte:head>
+  <script>
+    try {
+      const { matches: isDarkMode } = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      );
+      const theme = localStorage.getItem("theme");
+      const opposite = theme === "dark" ? "light" : "dark";
+      document.documentElement.classList.add(theme);
+      document.documentElement.classList.remove(opposite);
+    } catch (err) {
+      console.error(err);
+    }
+  </script>
+</svelte:head>
 
 <App {...f7params}>
   <!-- Left panel with cover effect when hidden -->
@@ -92,8 +112,23 @@
       <Page>
         <Navbar title="Menu">
           <NavRight>
-            <Button on:click={() => Dom7("body").toggleClass("dark")}>
-              <i id="well" class="icon f7-icons color-custom">sun_min</i>
+            <Button
+              on:click={() => {
+                const theme = localStorage.getItem("theme");
+                const opposite = theme === "dark" ? "light" : "dark";
+                document.documentElement.classList.add(opposite);
+                document.documentElement.classList.remove(theme);
+                localStorage.setItem("theme", opposite);
+                darkTheme.set(!$darkTheme);
+              }}
+            >
+              <i id="well" class="icon f7-icons color-custom">
+                {#if !$darkTheme}
+                  sun_min
+                {:else}
+                  moon
+                {/if}
+              </i>
               <!-- moon -->
             </Button>
           </NavRight>
