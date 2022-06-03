@@ -15,7 +15,7 @@
 </script>
 
 <Page name="form">
-  <Navbar title="Form" backLink="Back" />
+  <Navbar title="Form" />
 
   <BlockTitle>Form Example</BlockTitle>
   <List noHairlinesMd>

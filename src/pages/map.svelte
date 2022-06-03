@@ -1,10 +1,12 @@
 <script>
-  import { Page } from "framework7-svelte";
+  import { Page, Navbar } from "framework7-svelte";
   import { Map, controls } from "@beyonk/svelte-mapbox";
   const { GeolocateControl, NavigationControl, ScaleControl } = controls;
 </script>
 
 <Page name="map">
+  <Navbar title="Form"  />
+
   <Map
     accessToken="pk.eyJ1Ijoid2FybW9hIiwiYSI6ImNsM3U0dThidDFlaTgzYmx0cTN6N2c2ZG8ifQ.UE81Ntp9JdS7LeYZRXjCvg"
     center={[-87.661557, 41.893748]}

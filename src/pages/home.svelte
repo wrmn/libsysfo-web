@@ -10,6 +10,8 @@
     NavRight,
     Link,
     Toolbar,
+    View,
+    Views,
     Block,
     BlockTitle,
     List,
@@ -21,8 +23,6 @@
 </script>
 
 <Page name="home">
-  <div class="intro">Lorem ipsum...</div>
-
   <!-- Top Navbar -->
   <Navbar sliding={false}>
     <NavLeft>
@@ -35,74 +35,42 @@
     </NavLeft>
     <NavTitle sliding>Library Information System</NavTitle>
   </Navbar>
-  <!-- Toolbar -->
-  <Toolbar bottom>
-    <Link>Left Link</Link>
-    <Link>Right Link</Link>
-  </Toolbar>
+  <Views tabs class="safe-areas">
+    <!-- Tabbar for switching views-tabs -->
+    <Toolbar tabbar labels top>
+      <Link
+        tabLink="#view-map"
+        tabLinkActive
+        iconIos="f7:house_fill"
+        iconAurora="f7:house_fill"
+        iconMd="material:home"
+        text="Map"
+      />
+      <Link
+        tabLink="#view-form"
+        iconIos="f7:square_list_fill"
+        iconAurora="f7:square_list_fill"
+        iconMd="material:view_list"
+        text="Form"
+      />
+      <Link
+        tabLink="#view-about"
+        iconIos="f7:gear"
+        iconAurora="f7:gear"
+        iconMd="material:settings"
+        text="Settings"
+      />
+    </Toolbar>
+
+    <!-- Your main view/tab, should have "view-main" class. It also has "tabActive" prop -->
+    <View id="view-map" main tab tabActive url="/map/" />
+
+    <!-- Catalog View -->
+    <View id="view-form" name="form" tab url="/form/" />
+
+    <!-- Settings View -->
+    <View id="view-about" name="about" tab url="/about/" />
+  </Views>
   <!-- Page content -->
-  <Block strong>
-    <p>
-      This is an example of split view application layout, commonly used on
-      tablets. The main approach of such kind of layout is that you can see
-      different views at the same time.
-    </p>
-
-    <p>
-      Each view may have different layout, different navbar type (dynamic, fixed
-      or static) or without navbar.
-    </p>
-
-    <p>
-      The fun thing is that you can easily control one view from another without
-      any line of JavaScript just using "data-view" attribute on links.
-    </p>
-  </Block>
-
-  <BlockTitle>Navigation</BlockTitle>
-  <List>
-    <ListItem link="/about/" title="About" />
-    <ListItem link="/form/" title="Form" />
-  </List>
-
-  <BlockTitle>Modals</BlockTitle>
-  <Block strong>
-    <Row>
-      <Col width="50">
-        <Button fill raised popupOpen="#my-popup">Popup</Button>
-      </Col>
-      <Col width="50">
-        <Button fill raised loginScreenOpen="#my-login-screen"
-          >Login Screen</Button
-        >
-      </Col>
-    </Row>
-  </Block>
-
-  <BlockTitle>Panels</BlockTitle>
-  <Block strong>
-    <Row>
-      <Col width="50">
-        <Button fill raised panelOpen="left">Left Panel</Button>
-      </Col>
-      <Col width="50">
-        <Button fill raised panelOpen="right">Right Panel</Button>
-      </Col>
-    </Row>
-  </Block>
-
-  <List>
-    <ListItem
-      title="Dynamic (Component) Route"
-      link="/dynamic-route/blog/45/post/125/?foo=bar#about"
-    />
-    <ListItem
-      title="Default Route (404)"
-      link="/load-something-that-doesnt-exist/"
-    />
-    <ListItem
-      title="Request Data & Load"
-      link="/request-and-load/user/123456/"
-    />
-  </List>
+ 
 </Page>
