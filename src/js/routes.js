@@ -1,10 +1,13 @@
 import HomePage from "../pages/home.svelte";
 import AboutPage from "../pages/about.svelte";
 import FormPage from "../pages/form.svelte";
-import MapPage from "../pages/map.svelte";
 
-import LeftPage1 from "../pages/left-page-1.svelte";
-import LeftPage2 from "../pages/left-page-2.svelte";
+//library page import
+import LibraryIndexPage from "../pages/library/index.svelte";
+import LibraryHomePage from "../pages/library/home.svelte";
+import LibraryListPage from "../pages/library/list.svelte";
+import LibraryMapPage from "../pages/library/map.svelte";
+
 import DynamicRoutePage from "../pages/dynamic-route.svelte";
 import RequestAndLoad from "../pages/request-and-load.svelte";
 import NotFoundPage from "../pages/404.svelte";
@@ -23,18 +26,22 @@ var routes = [
     component: FormPage,
   },
   {
-    path: "/map/",
-    component: MapPage,
+    path: "/library/",
+    component: LibraryIndexPage,
+  },
+  {
+    path: "/library/home/",
+    component: LibraryHomePage,
+  },
+  {
+    path: "/library/list/",
+    component: LibraryListPage,
+  },
+  {
+    path: "/library/map/",
+    component: LibraryMapPage,
   },
 
-  {
-    path: "/left-page-1/",
-    component: LeftPage1,
-  },
-  {
-    path: "/left-page-2/",
-    component: LeftPage2,
-  },
   {
     path: "/dynamic-route/blog/:blogId/post/:postId/",
     component: DynamicRoutePage,

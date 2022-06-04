@@ -10,6 +10,9 @@
     View,
     Page,
     Navbar,
+    NavLeft,
+    Link,
+    NavTitle,
     NavRight,
     BlockTitle,
     List,
@@ -85,8 +88,6 @@
 </svelte:head>
 
 <App {...f7params}>
-  <!-- Left panel with cover effect when hidden -->
-
   <Panel left cover visibleBreakpoint={1280}>
     <View>
       <Page>
@@ -141,12 +142,29 @@
         <BlockTitle>Help</BlockTitle>
         <List>
           <ListItem link="/faq/" view=".view-main" panelClose title="FAQ" />
-          <ListItem link="/contact/" view=".view-main" panelClose title="Contact" />
+          <ListItem
+            link="/contact/"
+            view=".view-main"
+            panelClose
+            title="Contact"
+          />
           <ListItem link="/about/" view=".view-main" panelClose title="About" />
         </List>
       </Page>
     </View>
   </Panel>
 
-  <View main class="safe-areas" url="/" />
+  <View main class="safe-areas" url="/">
+    <Navbar sliding={false}>
+      <NavLeft>
+        <Link
+          iconIos="f7:menu"
+          iconAurora="f7:menu"
+          iconMd="material:menu"
+          panelOpen="left"
+        />
+      </NavLeft>
+      <NavTitle sliding>Library Information System</NavTitle>
+    </Navbar>
+  </View>
 </App>
