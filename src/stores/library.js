@@ -1,4 +1,4 @@
-import { readable } from "svelte/store";
+import { readable, writable } from "svelte/store";
 
 export const menus = readable([
   {
@@ -8,6 +8,7 @@ export const menus = readable([
     text: "Home",
     url: "/library/home/",
     active: true,
+    hasMap: false,
   },
   {
     tablink: "view-list",
@@ -16,6 +17,7 @@ export const menus = readable([
     text: "List",
     url: "/library/list/",
     active: false,
+    hasMap: false,
   },
   {
     tablink: "view-map",
@@ -24,5 +26,7 @@ export const menus = readable([
     text: "Map",
     url: "/library/map/",
     active: false,
+    hasMap: true,
   },
 ]);
+

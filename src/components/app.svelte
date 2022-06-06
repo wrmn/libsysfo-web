@@ -10,9 +10,6 @@
     View,
     Page,
     Navbar,
-    NavLeft,
-    Link,
-    NavTitle,
     NavRight,
     BlockTitle,
     List,
@@ -23,7 +20,7 @@
   import routes from "../js/routes";
   import store from "../js/store";
 
-  import { darkTheme } from "../stores/theme";
+  import { darkTheme, mainMenu } from "../stores/main";
 
   const device = getDevice();
   // Framework7 Parameters
@@ -66,9 +63,19 @@
       // Call F7 APIs here
     });
   });
+
   if (localStorage.getItem("theme") === "dark") {
     darkTheme.set(true);
   }
+
+  const switchTheme = () => {
+    const theme = localStorage.getItem("theme");
+    const opposite = theme === "dark" ? "light" : "dark";
+    document.documentElement.classList.add(opposite);
+    document.documentElement.classList.remove(theme);
+    localStorage.setItem("theme", opposite);
+    darkTheme.set(!$darkTheme);
+  };
 </script>
 
 <svelte:head>
@@ -93,17 +100,8 @@
       <Page>
         <Navbar title="Menu">
           <NavRight>
-            <Button
-              on:click={() => {
-                const theme = localStorage.getItem("theme");
-                const opposite = theme === "dark" ? "light" : "dark";
-                document.documentElement.classList.add(opposite);
-                document.documentElement.classList.remove(theme);
-                localStorage.setItem("theme", opposite);
-                darkTheme.set(!$darkTheme);
-              }}
-            >
-              <i id="well" class="icon f7-icons color-custom">
+            <Button on:click={switchTheme}>
+              <i class="icon f7-icons color-custom">
                 {#if !$darkTheme}
                   sun_min
                 {:else}
@@ -114,57 +112,24 @@
             </Button>
           </NavRight>
         </Navbar>
-        <List>
-          <ListItem link="/" view=".view-main" panelClose title="Home" />
-          <ListItem link="/book/" view=".view-main" panelClose title="Book" />
-          <ListItem
-            link="/library/"
-            view=".view-main"
-            panelClose
-            title="Library"
-          />
-        </List>
-        <BlockTitle>Preferences</BlockTitle>
-        <List>
-          <ListItem
-            link="/profile/"
-            view=".view-main"
-            panelClose
-            title="Profile"
-          />
-          <ListItem
-            link="/setting/"
-            view=".view-main"
-            panelClose
-            title="Setting"
-          />
-        </List>
-        <BlockTitle>Help</BlockTitle>
-        <List>
-          <ListItem link="/faq/" view=".view-main" panelClose title="FAQ" />
-          <ListItem
-            link="/contact/"
-            view=".view-main"
-            panelClose
-            title="Contact"
-          />
-          <ListItem link="/about/" view=".view-main" panelClose title="About" />
-        </List>
+        {#each $mainMenu as child}
+          {#if !child.main}
+            <BlockTitle>{child.name}</BlockTitle>
+          {/if}
+          <List>
+            {#each child.menus as menu}
+              <ListItem
+                link={menu.link}
+                view={menu.view}
+                panelClose={menu.panelClose}
+                title={menu.name}
+              />
+            {/each}
+          </List>
+        {/each}
       </Page>
     </View>
   </Panel>
 
-  <View main class="safe-areas" url="/">
-    <Navbar sliding={false}>
-      <NavLeft>
-        <Link
-          iconIos="f7:menu"
-          iconAurora="f7:menu"
-          iconMd="material:menu"
-          panelOpen="left"
-        />
-      </NavLeft>
-      <NavTitle sliding>Library Information System</NavTitle>
-    </Navbar>
-  </View>
+  <View main class="safe-areas" url="/" />
 </App>

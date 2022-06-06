@@ -1,6 +1,5 @@
 import HomePage from "../pages/home.svelte";
-import AboutPage from "../pages/about.svelte";
-import FormPage from "../pages/form.svelte";
+import AboutPage from "../pages/help/about.svelte";
 
 //library page import
 import LibraryIndexPage from "../pages/library/index.svelte";
@@ -8,22 +7,16 @@ import LibraryHomePage from "../pages/library/home.svelte";
 import LibraryListPage from "../pages/library/list.svelte";
 import LibraryMapPage from "../pages/library/map.svelte";
 
-import DynamicRoutePage from "../pages/dynamic-route.svelte";
-import RequestAndLoad from "../pages/request-and-load.svelte";
+import BookIndexPage from "../pages/book/index.svelte";
+import PaperIndexPage from "../pages/paper/index.svelte";
+
+
 import NotFoundPage from "../pages/404.svelte";
 
 var routes = [
   {
     path: "/",
     component: HomePage,
-  },
-  {
-    path: "/about/",
-    component: AboutPage,
-  },
-  {
-    path: "/form/",
-    component: FormPage,
   },
   {
     path: "/library/",
@@ -43,55 +36,17 @@ var routes = [
   },
 
   {
-    path: "/dynamic-route/blog/:blogId/post/:postId/",
-    component: DynamicRoutePage,
+    path: "/book/",
+    component: BookIndexPage,
   },
   {
-    path: "/request-and-load/user/:userId/",
-    async: function ({ router, to, resolve }) {
-      // App instance
-      var app = router.app;
+    path: "/paper/",
+    component: PaperIndexPage,
+  },
 
-      // Show Preloader
-      app.preloader.show();
-
-      // User ID from request
-      var userId = to.params.userId;
-
-      // Simulate Ajax Request
-      setTimeout(function () {
-        // We got user data from request
-        var user = {
-          firstName: "Vladimir",
-          lastName: "Kharlampidi",
-          about: "Hello, i am creator of Framework7! Hope you like it!",
-          links: [
-            {
-              title: "Framework7 Website",
-              url: "http://framework7.io",
-            },
-            {
-              title: "Framework7 Forum",
-              url: "http://forum.framework7.io",
-            },
-          ],
-        };
-        // Hide Preloader
-        app.preloader.hide();
-
-        // Resolve route to load page
-        resolve(
-          {
-            component: RequestAndLoad,
-          },
-          {
-            props: {
-              user: user,
-            },
-          }
-        );
-      }, 1000);
-    },
+  {
+    path: "/help/about/",
+    component: AboutPage,
   },
   {
     path: "(.*)",

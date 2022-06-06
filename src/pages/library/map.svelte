@@ -1,7 +1,7 @@
 <script>
   import { Page, Navbar } from "framework7-svelte";
-  import { Map, Geocoder, Marker, controls } from "@beyonk/svelte-mapbox";
-  import { onMount } from "svelte";
+  import { Map, Marker, controls } from "@beyonk/svelte-mapbox";
+  import { onDestroy, onMount } from "svelte";
   const { GeolocateControl, NavigationControl, ScaleControl } = controls;
 
   const place = null;
@@ -12,18 +12,6 @@
   let mapComponent;
   let zoom = 11.15;
 
-  onMount(() => {
-    resizes();
-  });
-
-  function resizes() {
-    mapComponent.resize();
-  }
-  function placeChanged(e) {
-    const { result } = e.detail;
-    mapComponent.setCenter(result.center, 14);
-  }
-
   function randomLng() {
     return 77 + (Math.random() - 0.5) * 30;
   }
@@ -33,7 +21,6 @@
   }
 
   function flyToRandomPlace() {
-    mapComponent.resize();
     mapComponent.flyTo({
       center: [randomLng(), randomLat()],
       essential: true,
@@ -51,25 +38,6 @@
 
 <Page name="map">
   <Navbar title="Maps" />
-  <button on:click={flyToRandomPlace}>a</button>
-  <div class="section-txt" id="geocoder">
-    <form>
-      <Geocoder
-        value="(Near London)"
-        accessToken={mapboxToken}
-        on:result={placeChanged}
-        on:clear={() => mapComponent.setCenter({ lng: 0, lat: 0 })}
-      />
-      {#if place}
-        <dl>
-          <dt>Name:</dt>
-          <dd>{place.label}</dd>
-          <dt>Geolocation:</dt>
-          <dd>lat: {place.geometry.lat}, lng: {place.geometry.lng}</dd>
-        </dl>
-      {/if}
-    </form>
-  </div>
   <div class="section-txt" id="map">
     <div class="content-info">
       <div class="action-buttons">
@@ -99,11 +67,6 @@
           <Marker lat={marker.lat} lng={marker.lng} />
         </Map>
       </div>
-      {#if center}
-        <dt>Geolocation:</dt>
-        <dd>lat: {center.lat}, lng: {center.lng}</dd>
-        <dd>zoom: {zoom}</dd>
-      {/if}
     </div>
   </div>
 </Page>
@@ -111,7 +74,7 @@
 <style>
   .map-wrap {
     width: 100%;
-    height: 300px;
+    height: 500px;
   }
 
   .action-buttons {

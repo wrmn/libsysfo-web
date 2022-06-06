@@ -13,7 +13,7 @@
 </script>
 
 <Page name="home">
-  <Navbar title="Library" backLink="Back" />
+  <Navbar title="Paper" backLink="Back" />
   <List>
     {#each $menus as menu}
       <ListItem link={menu.url} view=".view-main" title={menu.text} />
