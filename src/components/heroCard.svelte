@@ -7,7 +7,7 @@
   <div class="card">
     <div class="border" />
     <img src={data.image} alt="" />
-    <h1 class="capitalize">{data.content}</h1>
+    <h1 class="make-capital">{data.content}</h1>
     <div class="button-container">
       <Button
         href={data.path}

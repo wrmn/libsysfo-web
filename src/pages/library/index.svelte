@@ -1,49 +1,100 @@
 <script>
+  import { data } from "dom7";
+
   import {
     Page,
-    List,
-    ListItem,
     Navbar,
-    Card,
-    CardContent,
-    CardHeader,
-    Link,
+    List,
+    ListInput,
+    Row,
+    Preloader,
+    Icon,
+    Col,
   } from "framework7-svelte";
-  import { menus } from "../../stores/library";
+  import { onDestroy, onMount } from "svelte";
+  import ContentCard from "../../components/contentCard.svelte";
+
+  import { dataResult, geoData } from "../../stores/data";
+
+  let displayData = [];
+  let something = "";
+  let latitude, longitude;
+
+  onMount(() => {
+    dataSample();
+    navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
+  });
+
+  onDestroy(() => {
+    dataResult.set([]);
+    displayData = [];
+  });
+
+  const dataSample = async () => {
+    const response = await fetch("http://192.168.100.8:10000");
+    const msg = await response.json();
+    console.log(msg);
+    msg.data.forEach((e) => {
+      displayData.push({
+        header: "lihat perpustakaan",
+        address: e.address,
+        image: e.images.main,
+        coordinate: e.coordinate,
+        content: e.name,
+        path: `/library/${e.id}/`,
+      });
+    });
+
+    dataResult.set(displayData);
+  };
+
+  function locationSuccess(position) {
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
+    geoData.set([longitude, latitude]);
+  }
+
+  function locationError(error) {
+    const message = error.message;
+    console.log(message);
+  }
+
+  function nice() {
+    console.log(something);
+  }
 </script>
 
 <Page name="home">
   <Navbar title="Library" backLink="Back" />
-  <List>
-    {#each $menus as menu}
-      <ListItem link={menu.url} view=".view-main" title={menu.text} />
+  <div class="searchbar-container make-center">
+    <List noHairlinesMd>
+      <ListInput
+        type="text"
+        placeholder="Your name"
+        clearButton
+        bind:value={something}
+        on:change={nice}
+      >
+        <Icon f7="search" slot="media" />
+      </ListInput>
+    </List>
+  </div>
+  <Row class="search-list searchbar-found">
+    {#if $dataResult.length == 0}
+      <div class="make-center">
+        <Preloader color="multi" />
+      </div>
+    {/if}
+    {#each $dataResult as sample}
+      <Col width="100" medium="50">
+        <ContentCard data={sample} position={$geoData} />
+      </Col>
     {/each}
-  </List>
-  <Card expandable>
-    <CardContent padding={false}>
-      <div class="bg-color-red" style="height: 300px">
-        <CardHeader textColor="white" class="display-block">
-          Framework7
-          <br />
-          <small style="opacity: 0.7">Build Mobile Apps</small>
-        </CardHeader>
-        <Link
-          cardClose
-          color="white"
-          class="card-opened-fade-in"
-          style="position: absolute; right: 15px; top: 15px"
-          iconF7="xmark_circle_fill"
-        />
-      </div>
-      <div class="card-content-padding">
-        <p>
-          Framework7 - is a free and open source HTML mobile framework to
-          develop hybrid mobile apps or web apps with iOS or Android (Material)
-          native look and feel. It is also an indispensable prototyping apps
-          tool to show working app prototype as soon as possible in case you
-          need to. Framework7 is created by Vladimir Kharlampidi (iDangero.us).
-        </p>
-      </div>
-    </CardContent>
-  </Card>
+  </Row>
 </Page>
+
+<style>
+  .searchbar-container {
+    width: 50%;
+  }
+</style>
