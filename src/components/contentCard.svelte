@@ -18,8 +18,9 @@
     <div class="border" />
     <img src={data.image} alt="" />
     <div class="info-container">
-      <h1 class="make-capital">{data.content}</h1>
-
+      <div class="title">
+        <h1 class="make-capital">{data.content}</h1>
+      </div>
       {data.address}
       <br />
       {#if position != false}
@@ -77,6 +78,9 @@
     );
   }
 
+  .card .title {
+    min-height: 125px;
+  }
   .border {
     position: absolute;
     width: 100%;

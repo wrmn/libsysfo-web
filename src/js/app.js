@@ -21,7 +21,3 @@ Framework7.use(Framework7Svelte);
 const app = new App({
   target: document.getElementById("app"),
 });
-document.addEventListener("deviceready", onDeviceReady, false);
-function onDeviceReady() {
-  console.log("navigator.geolocation works well");
-}

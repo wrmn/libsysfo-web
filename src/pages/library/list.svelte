@@ -69,7 +69,7 @@
 
   function locationError(error) {
     const message = error.message;
-    console.log(message);
+    latitude = message;
   }
 
   function nice() {
@@ -79,6 +79,7 @@
 
 <Page name="home">
   <StandardHeader title="Library List" />
+  {$geoData}
   <div class="searchbar-container make-center">
     <List noHairlinesMd>
       <ListInput
