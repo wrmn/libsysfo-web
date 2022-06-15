@@ -98,3 +98,42 @@ export const mainMenu = readable([
 ]);
 
 export const darkTheme = writable(false);
+
+export const libraryCards = readable([
+  {
+    header: "List",
+    image: "./static/images/hero-5.svg",
+    path: "/library/list/",
+  },
+  {
+    header: "Map",
+    image: "./static/images/hero-6.svg",
+    path: "/library/map/",
+  },
+]);
+
+export const bookCards = readable([
+  {
+    header: "Search",
+    image: "./static/images/hero-7.svg",
+    path: "/library/list/",
+  },
+  {
+    header: "Borrow",
+    image: "./static/images/hero-8.svg",
+    path: "/library/map/",
+  },
+]);
+
+export const paperCards = readable([
+  {
+    header: "Search",
+    image: "./static/images/hero-9.svg",
+    path: "/library/list/",
+  },
+  {
+    header: "Access",
+    image: "./static/images/hero-10.svg",
+    path: "/library/map/",
+  },
+]);

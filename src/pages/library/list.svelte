@@ -1,61 +1,117 @@
 <script>
-  import { Page, Navbar, Block, BlockTitle } from "framework7-svelte";
+  import {
+    Page,
+    Navbar,
+    List,
+    ListInput,
+    Row,
+    Preloader,
+    Icon,
+    Col,
+  } from "framework7-svelte";
+  import { onDestroy, onMount } from "svelte";
+  import ContentCard from "../../components/contentCard.svelte";
+  import StandardHeader from "../../components/standardHeader.svelte";
+  import { dataResult, geoData } from "../../stores/data";
+
+  let displayData = [];
+  let something = "";
+  let latitude, longitude;
+
+  onMount(() => {
+    dataSample();
+    navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
+  });
+
+  onDestroy(() => {
+    dataResult.set([]);
+    displayData = [];
+  });
+
+  var handleError = function (err) {
+    console.warn(err);
+    dataResult.set(err.message);
+
+    return new Response(
+      JSON.stringify({
+        code: 400,
+        message: "Stupid network Error",
+      })
+    );
+  };
+
+  const dataSample = async () => {
+    const response = await fetch(
+      "https://young-castle-31877.herokuapp.com/library"
+    ).catch(handleError);
+    const msg = await response.json();
+
+    // dataResult.set(JSON.stringify(msg));
+    msg.data.forEach((e) => {
+      displayData.push({
+        header: "lihat perpustakaan",
+        address: e.address,
+        image: e.images.main,
+        coordinate: e.coordinate,
+        content: e.name,
+        path: `/library/${e.id}/`,
+      });
+    });
+
+    dataResult.set(displayData);
+  };
+
+  function locationSuccess(position) {
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
+    geoData.set([longitude, latitude]);
+  }
+
+  function locationError(error) {
+    const message = error.message;
+    console.log(message);
+  }
+
+  function nice() {
+    console.log(something);
+  }
 </script>
 
-<Page>
-  <Navbar title="About" backLink="Back" />
-  <BlockTitle>About My App</BlockTitle>
-  <Block strong>
-    <p>
-      Fugiat perspiciatis excepturi, soluta quod non ullam deleniti. Nobis sint
-      nemo consequuntur, fugiat. Eius perferendis animi autem incidunt vel quod
-      tenetur nostrum, voluptate omnis quasi quidem illum consequuntur, a,
-      quisquam.
-    </p>
-    <p>
-      Laudantium neque magnam vitae nemo quam commodi, in cum dolore obcaecati
-      laborum, excepturi harum, optio qui, consequuntur? Obcaecati dolor sequi
-      nesciunt culpa quia perspiciatis, reiciendis ex debitis, ut tenetur alias.
-    </p>
-  </Block>
-  <Block strong>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni molestiae
-      laudantium dignissimos est nobis delectus nemo ea alias voluptatum
-      architecto, amet similique, saepe iste consectetur in repellat ut minus
-      quibusdam!
-    </p>
-    <p>
-      Molestias et distinctio porro nesciunt ratione similique, magni doloribus,
-      rerum nobis, aliquam quae reiciendis quasi modi. Nam a recusandae, fugiat
-      in ea voluptates fuga eius, velit corrupti reprehenderit dignissimos
-      consequatur!
-    </p>
-    <p>
-      Blanditiis, cumque quo adipisci. Molestiae, dolores dolorum quos
-      doloremque ipsa ullam eligendi commodi deserunt doloribus inventore magni?
-      Ea mollitia veniam nostrum nihil, iusto doloribus a at! Ea molestiae ullam
-      delectus!
-    </p>
-  </Block>
-  <Block strong>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni molestiae
-      laudantium dignissimos est nobis delectus nemo ea alias voluptatum
-      architecto, amet similique, saepe iste consectetur in repellat ut minus
-      quibusdam!
-    </p>
-    <p>
-      Molestias et distinctio porro nesciunt ratione similique, magni doloribus,
-      rerum nobis, aliquam quae reiciendis quasi modi. Nam a recusandae, fugiat
-      in ea voluptates fuga eius, velit corrupti reprehenderit dignissimos
-      consequatur!
-    </p>
-    <p>
-      Blanditiis, cumque quo adipisci. Molestiae, dolores dolorum quos
-      doloremque ipsa ullam eligendi commodi deserunt doloribus inventore magni?
-      Ea mollitia veniam nostrum nihil, iusto doloribus a at! Ea molestiae ullam
-      delectus!
-    </p>
-  </Block>
+<Page name="home">
+  <StandardHeader title="Library List" />
+  <div class="searchbar-container make-center">
+    <List noHairlinesMd>
+      <ListInput
+        type="text"
+        placeholder="Your name"
+        clearButton
+        bind:value={something}
+        on:change={nice}
+      >
+        <Icon f7="search" slot="media" />
+      </ListInput>
+    </List>
+  </div>
+  <Row class="search-list searchbar-found">
+    {#if typeof $dataResult == "object"}
+      {#if $dataResult.length == 0}
+        <div class="make-center">
+          <Preloader color="multi" />
+        </div>
+      {/if}
+      {#each $dataResult as sample}
+        <Col width="100" medium="50">
+          <ContentCard data={sample} position={$geoData} />
+        </Col>
+      {/each}
+    {:else}
+      {$dataResult}
+    {/if}
+  </Row>
 </Page>
+
+<style>
+  .searchbar-container {
+    width: 50%;
+  }
+</style>

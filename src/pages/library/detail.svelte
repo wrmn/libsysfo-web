@@ -8,13 +8,40 @@
     Tabs,
     Tab,
   } from "framework7-svelte";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
+  import { libraryResult } from "../../stores/data";
 
   export let f7route;
 
   onMount(() => {
-    console.log(f7route.params["blogId"]);
+    dataSample(f7route.params["libraryId"]);
+    console.log(f7route.params["libraryId"]);
   });
+
+  onDestroy(() => {
+    libraryResult.set([]);
+  });
+
+  var handleError = function (err) {
+    console.warn(err);
+    libraryResult.set(err.message);
+
+    return new Response(
+      JSON.stringify({
+        code: 400,
+        message: "Stupid network Error",
+      })
+    );
+  };
+
+  const dataSample = async (id) => {
+    const response = await fetch(
+      `https://young-castle-31877.herokuapp.com/library/${id}`
+    ).catch(handleError);
+    const msg = await response.json();
+
+    libraryResult.set(msg);
+  };
 </script>
 
 <Page>
@@ -29,6 +56,7 @@
   <Tabs>
     <Tab id="tab-1" tabActive>
       <Block strong>
+        {JSON.stringify($libraryResult)}
         <ul>
           <li><b>Url:</b> {f7route.url}</li>
           <li><b>Path:</b> {f7route.path}</li>
@@ -53,7 +81,7 @@
         </ul>
       </Block>
     </Tab>
-    <Tab id="tab-2" >
+    <Tab id="tab-2">
       <Block>
         <p>Tab 2 content</p>
         <p>

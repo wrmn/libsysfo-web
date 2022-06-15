@@ -7,7 +7,9 @@
   <div class="card">
     <div class="border" />
     <img src={data.image} alt="" />
-    <h1 class="make-capital">{data.content}</h1>
+    {#if data.content}
+      <h1 class="make-capital">{data.content}</h1>
+    {/if}
     <div class="button-container">
       <Button
         href={data.path}

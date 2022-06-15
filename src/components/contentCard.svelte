@@ -5,11 +5,9 @@
   export let data;
   export let position = false;
 
-  console.log(position);
-
   const measureDistance = (from, to) => {
     let fromPoint = turf.point(from);
-    let toPoint = turf.point(to);
+    let toPoint = turf.point([to.longitude, to.latitude]);
 
     return turf.distance(fromPoint, toPoint, "kilometers");
   };
@@ -19,8 +17,9 @@
   <div class="card">
     <div class="border" />
     <img src={data.image} alt="" />
-    <h1 class="make-capital">{data.content}</h1>
     <div class="info-container">
+      <h1 class="make-capital">{data.content}</h1>
+
       {data.address}
       <br />
       {#if position != false}
@@ -55,16 +54,17 @@
 
   .card .info-container {
     bottom: 10px;
-    position: absolute;
+    padding: 10px 10px 0px 45%;
+    width: 50%;
+    position: relative;
     font-weight: 800;
-    padding-left: 5%;
   }
 
   .card {
     width: 96%;
     bottom: -10%;
     max-width: 600px;
-    min-height: 200px;
+    min-height: 250px;
     margin-left: auto;
     margin-right: auto;
     position: relative;
@@ -87,13 +87,6 @@
     top: -6px;
   }
 
-  .card h1 {
-    position: relative;
-    padding: 10px 10px 0px 43%;
-    font-size: 1.7em;
-    width: 50%;
-  }
-
   .info-container {
     bottom: 0px;
     position: absolute;
@@ -104,8 +97,8 @@
     object-fit: cover;
     object-position: center;
     position: absolute;
-    top: -7%;
+    top: 5%;
     left: -5%;
-    height: 150px;
+    height: 84%;
   }
 </style>

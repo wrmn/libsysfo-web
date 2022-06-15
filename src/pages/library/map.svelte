@@ -1,8 +1,8 @@
 <script>
-  import { Page, Navbar } from "framework7-svelte";
+  import { Page, Navbar, NavRight, Link } from "framework7-svelte";
   import { Map, Marker, controls } from "@beyonk/svelte-mapbox";
-  import { onDestroy, onMount } from "svelte";
-  const { GeolocateControl, NavigationControl, ScaleControl } = controls;
+  const { GeolocateControl, NavigationControl } = controls;
+  import StandardHeader from "../../components/standardHeader.svelte";
 
   const place = null;
   const mapboxToken =
@@ -37,14 +37,14 @@
 </script>
 
 <Page name="map">
-  <Navbar title="Maps" />
+  <StandardHeader title="Map" />
+
   <div class="section-txt" id="map">
     <div class="content-info">
       <div class="action-buttons">
         <button id="fly-to" on:click={flyToRandomPlace}
           >Fly to random location</button
         >
-
         <button
           id="change-zoom"
           on:click={() => (zoom = Math.floor(Math.random() * 10))}

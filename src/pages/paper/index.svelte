@@ -1,49 +1,43 @@
 <script>
-  import {
-    Page,
-    List,
-    ListItem,
-    Navbar,
-    Card,
-    CardContent,
-    CardHeader,
-    Link,
-  } from "framework7-svelte";
-  import { menus } from "../../stores/library";
+  import { Page, Col, Row } from "framework7-svelte";
+  import { paperCards } from "../../stores/main";
+  import StandardHeader from "../../components/standardHeader.svelte";
+  import MenuCard from "../../components/menuCard.svelte";
 </script>
 
 <Page name="home">
-  <Navbar title="Paper" backLink="Back" />
-  <List>
-    {#each $menus as menu}
-      <ListItem link={menu.url} view=".view-main" title={menu.text} />
-    {/each}
-  </List>
-  <Card expandable>
-    <CardContent padding={false}>
-      <div class="bg-color-red" style="height: 300px">
-        <CardHeader textColor="white" class="display-block">
-          Framework7
-          <br />
-          <small style="opacity: 0.7">Build Mobile Apps</small>
-        </CardHeader>
-        <Link
-          cardClose
-          color="white"
-          class="card-opened-fade-in"
-          style="position: absolute; right: 15px; top: 15px"
-          iconF7="xmark_circle_fill"
-        />
+  <StandardHeader title="Paper" />
+  <Row>
+    <Col width="100" medium="50">
+      <div class="main-image title">
+        <div>AKSES PENILITIAN</div>
+        <div>YANG DITULIS DALAM JURNAL</div>
       </div>
-      <div class="card-content-padding">
-        <p>
-          Framework7 - is a free and open source HTML mobile framework to
-          develop hybrid mobile apps or web apps with iOS or Android (Material)
-          native look and feel. It is also an indispensable prototyping apps
-          tool to show working app prototype as soon as possible in case you
-          need to. Framework7 is created by Vladimir Kharlampidi (iDangero.us).
-        </p>
-      </div>
-    </CardContent>
-  </Card>
+    </Col>
+    <Col width="100" medium="50">
+      <Row>
+        {#each $paperCards as card}
+          <Col width="100">
+            <MenuCard data={card} />
+          </Col>
+        {/each}
+      </Row>
+    </Col>
+  </Row>
 </Page>
+
+<style>
+  .main-image {
+    margin: auto;
+    height: 450px;
+    background-image: url("../assets/images/hero-4.svg");
+    background-position: right bottom;
+    background-size: 350px;
+    background-repeat: no-repeat;
+    font-family: "Alata", sans-serif;
+    margin-bottom: 10%;
+    max-width: 500px;
+    font-size: 3em;
+    font-weight: 500;
+  }
+</style>

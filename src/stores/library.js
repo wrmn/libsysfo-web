@@ -1,4 +1,4 @@
-import { readable, writable } from "svelte/store";
+import { readable } from "svelte/store";
 
 export const menus = readable([
   {
@@ -29,4 +29,3 @@ export const menus = readable([
     hasMap: true,
   },
 ]);
-
