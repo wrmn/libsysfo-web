@@ -3,7 +3,7 @@
   export let title;
 </script>
 
-<Navbar {title} backLink="back">
+<Navbar {title} backLink="back" class="make-capital">
   <NavRight>
     <Link href="/"><Icon f7="house_fill" /></Link>
   </NavRight>

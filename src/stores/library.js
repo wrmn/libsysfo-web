@@ -1,31 +1,16 @@
-import { readable } from "svelte/store";
+import { readable, writable } from "svelte/store";
 
-export const menus = readable([
+export const current = writable("home");
+
+export const libraryCards = readable([
   {
-    tablink: "view-home",
-    icon: "house_fill",
-    iconMd: "home",
-    text: "Home",
-    url: "/library/home/",
-    active: true,
-    hasMap: false,
+    header: "List",
+    image: "./static/images/hero-5.svg",
+    path: "/library/list/",
   },
   {
-    tablink: "view-list",
-    icon: "square_list_fill",
-    iconMd: "view_list",
-    text: "List",
-    url: "/library/list/",
-    active: false,
-    hasMap: false,
-  },
-  {
-    tablink: "view-map",
-    icon: "map",
-    iconMd: "map",
-    text: "Map",
-    url: "/library/map/",
-    active: false,
-    hasMap: true,
+    header: "Map",
+    image: "./static/images/hero-6.svg",
+    path: "/library/map/",
   },
 ]);

@@ -1,5 +1,7 @@
 import { readable, writable } from "svelte/store";
 
+export const darkTheme = writable(false);
+
 export const mainCards = readable([
   {
     header: "cari perpustakaan",
@@ -94,21 +96,6 @@ export const mainMenu = readable([
         view: ".view-main",
       },
     ],
-  },
-]);
-
-export const darkTheme = writable(false);
-
-export const libraryCards = readable([
-  {
-    header: "List",
-    image: "./static/images/hero-5.svg",
-    path: "/library/list/",
-  },
-  {
-    header: "Map",
-    image: "./static/images/hero-6.svg",
-    path: "/library/map/",
   },
 ]);
 

@@ -10,7 +10,7 @@
     Col,
   } from "framework7-svelte";
 
-  import HeroCard from "../components/heroCard.svelte";
+  import HeroCard from "../components/card/heroCard.svelte";
   import { mainCards } from "../stores/main";
 </script>
 

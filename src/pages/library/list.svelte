@@ -10,13 +10,11 @@
     Col,
   } from "framework7-svelte";
   import { onDestroy, onMount } from "svelte";
-  import ContentCard from "../../components/contentCard.svelte";
+  import ContentCard from "../../components/card/contentCard.svelte";
   import StandardHeader from "../../components/standardHeader.svelte";
   import { dataResult, geoData } from "../../stores/data";
 
   let displayData = [];
-  let something = "";
-  let latitude, longitude;
 
   onMount(() => {
     dataSample();
@@ -31,13 +29,6 @@
   var handleError = function (err) {
     console.warn(err);
     dataResult.set(err.message);
-
-    return new Response(
-      JSON.stringify({
-        code: 400,
-        message: "Stupid network Error",
-      })
-    );
   };
 
   const dataSample = async () => {
@@ -45,8 +36,6 @@
       "https://young-castle-31877.herokuapp.com/library"
     ).catch(handleError);
     const msg = await response.json();
-
-    // dataResult.set(JSON.stringify(msg));
     msg.data.forEach((e) => {
       displayData.push({
         header: "lihat perpustakaan",
@@ -62,32 +51,23 @@
   };
 
   function locationSuccess(position) {
-    latitude = position.coords.latitude;
-    longitude = position.coords.longitude;
-    geoData.set([longitude, latitude]);
+    geoData.set([position.coords.longitude, position.coords.latitude]);
   }
 
   function locationError(error) {
     const message = error.message;
-    latitude = message;
-  }
-
-  function nice() {
-    console.log(something);
+    alert(message);
   }
 </script>
 
 <Page name="home">
   <StandardHeader title="Library List" />
-  {$geoData}
   <div class="searchbar-container make-center">
     <List noHairlinesMd>
       <ListInput
         type="text"
         placeholder="Your name"
         clearButton
-        bind:value={something}
-        on:change={nice}
       >
         <Icon f7="search" slot="media" />
       </ListInput>
