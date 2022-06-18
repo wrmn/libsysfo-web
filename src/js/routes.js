@@ -3,6 +3,7 @@ import AboutPage from "../pages/help/about.svelte";
 
 //library page import
 import LibraryIndexPage from "../pages/library/index.svelte";
+import LibraryMapPage from "../pages/library/map.svelte";
 import LibraryListPage from "../pages/library/list.svelte";
 import LibraryDetailPage from "../pages/library/detail.svelte";
 
@@ -26,7 +27,11 @@ var routes = [
         component: LibraryListPage,
       },
       {
-        path: ":libraryId/",
+        path: "map/",
+        component: LibraryMapPage,
+      },
+      {
+        path: "detail/:libraryId/",
         component: LibraryDetailPage,
       },
     ],

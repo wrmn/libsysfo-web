@@ -16,25 +16,19 @@
   import Direction from "./detail/_Direction.svelte";
 
   import { onDestroy, onMount } from "svelte";
-  import { Map, Marker, controls } from "@beyonk/svelte-mapbox";
+  import { Map } from "@beyonk/svelte-mapbox";
   import { libraryResult } from "../../stores/data";
 
   export let f7route;
 
-  const mapboxToken =
-    "pk.eyJ1Ijoid2FybW9hIiwiYSI6ImNsM3U0dThidDFlaTgzYmx0cTN6N2c2ZG8ifQ.UE81Ntp9JdS7LeYZRXjCvg";
-  let center = { lat: -0.9345808, lng: 100.37 };
+  const mapboxToken = import.meta.env.VITE_MAPBOX_KEY;
   let mapComponent;
-  let lat = 0;
-  let lng = 0;
+  let zoom = 11.5;
   let loc = {
     src: [0, 0],
     dst: [0, 0],
   };
-
-  let zoom = 11.5;
-
-  const { NavigationControl } = controls;
+  let center = { lat: -0.9345808, lng: 100.37 };
 
   onMount(() => {
     navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
@@ -56,14 +50,6 @@
 
   var handleError = function (err) {
     console.warn(err);
-    libraryResult.set(err.message);
-
-    return new Response(
-      JSON.stringify({
-        code: 400,
-        message: "Stupid network Error",
-      })
-    );
   };
 
   const dataSample = async (id) => {
@@ -82,11 +68,18 @@
     mapComponent.resize();
   }
 
-  async function getDirection() {
+  async function getDirection(meth) {
+    // NOTE: change this line for custom location
+    loc.src = [80.46084726822548, -0.915438492909816];
+
     const query = await fetch(
-      `https://api.mapbox.com/directions/v5/mapbox/driving/${loc.src[0]},${loc.src[1]};${loc.dst[0]},${loc.dst[1]}?steps=true&geometries=geojson&access_token=${mapboxToken}`,
+      `https://api.mapbox.com/directions/v5/mapbox/${meth}/${loc.src[0]},${loc.src[1]};${loc.dst[0]},${loc.dst[1]}?steps=true&geometries=geojson&access_token=${mapboxToken}`,
       { method: "GET" }
-    );
+    ).catch(handleError);
+
+    if (query.status != 200) {
+      return false;
+    }
     return await query.json();
   }
 </script>
@@ -132,8 +125,11 @@
             {center}
             bind:zoom
           >
-            <Direction dir={getDirection()} coords={loc} />
-            <NavigationControl />
+            <Direction
+              dirWalking={getDirection("walking")}
+              dirDriving={getDirection("driving")}
+              coords={loc}
+            />
           </Map>
         </div>
       </Block>

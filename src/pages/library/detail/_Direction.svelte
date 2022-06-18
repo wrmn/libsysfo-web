@@ -1,9 +1,16 @@
 <script>
   import { getContext } from "svelte";
   import { contextKey } from "@beyonk/svelte-mapbox";
-  import { Button, List, ListItem, AccordionContent } from "framework7-svelte";
+  import {
+    f7,
+    Button,
+    List,
+    ListItem,
+    AccordionContent,
+  } from "framework7-svelte";
   import * as turf from "@turf/turf";
-  export let dir;
+  export let dirWalking;
+  export let dirDriving;
   export let coords = {
     src: [0, 0],
     dst: [0, 0],
@@ -45,13 +52,33 @@
     }
     return zoom;
   }
+  async function directions(meth) {
+    let data;
+    if (meth == "driving") {
+      data = await dirDriving;
+    } else if (meth == "walking") {
+      data = await dirWalking;
+    } else {
+      return;
+    }
 
-  async function directions() {
-    // let loc = {
-    //   latitude: -0.915438492909816,
-    //   longitude: 100.46084726822548,
-    // };
-    const data = await dir;
+    if (!data || data.routes.length == 0) {
+      f7.dialog
+        .create({
+          title: "",
+          text: "Tidak dapat menemukan rute",
+          buttons: [
+            {
+              text: "OK",
+            },
+          ],
+        })
+        .open();
+      setTimeout(function () {
+        f7.dialog.close();
+      }, 3000);
+      return;
+    }
     const route = data.routes[0].geometry.coordinates;
     const mid = turf.midpoint(turf.point(coords.src), turf.point(coords.dst))
       .geometry.coordinates;
@@ -95,15 +122,21 @@
 
 <div class="button-container">
   <List accordionList>
-    <ListItem accordionItem title="Action">
+    <ListItem accordionItem title="Location">
       <AccordionContent>
-        <Button fill raised on:click={() => directions()}>direction</Button>
-        <Button fill raised on:click={() => currentLocation()}
-          >My Location</Button
+        <Button fill raised on:click={() => currentLocation()}>My</Button>
+        <Button fill raised on:click={() => libraryLocation()}>Library</Button>
+      </AccordionContent>
+    </ListItem>
+
+    <ListItem accordionItem title="Direction">
+      <AccordionContent>
+        <Button fill raised on:click={() => directions("walking")}
+          >walking</Button
         >
-        <Button fill raised on:click={() => libraryLocation()}>
-          Library Location
-        </Button>
+        <Button fill raised on:click={() => directions("driving")}
+          >driving</Button
+        >
       </AccordionContent>
     </ListItem>
   </List>
@@ -112,8 +145,7 @@
 <style>
   .button-container {
     width: 40vw;
-    max-width: 250px;
+    max-width: 150px;
     padding-left: 30px;
-    background-color: rgba(0, 0, 0, 0);
   }
 </style>

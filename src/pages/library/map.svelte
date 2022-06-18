@@ -1,19 +1,15 @@
 <script>
-  import {
-    Page,
-    Navbar,
-    List,
-    ListInput,
-    Row,
-    Preloader,
-    Icon,
-    Col,
-  } from "framework7-svelte";
   import { onDestroy, onMount } from "svelte";
-  import ContentCard from "../../components/card/contentCard.svelte";
+  import { Page, Block } from "framework7-svelte";
   import StandardHeader from "../../components/standardHeader.svelte";
-  import { dataResult, geoData } from "../../stores/data";
+  import { Map } from "@beyonk/svelte-mapbox";
+  import { geoData } from "../../stores/data";
+  import AllMarker from "./map/_AllMarker.svelte";
 
+  let mapComponent;
+  const mapboxToken = import.meta.env.VITE_MAPBOX_KEY;
+  let zoom = 12;
+  let center = { lat: -0.9345808, lng: 100.39 };
   let displayData = [];
 
   onMount(() => {
@@ -22,13 +18,12 @@
   });
 
   onDestroy(() => {
-    dataResult.set([]);
     displayData = [];
   });
 
   var handleError = function (err) {
     console.warn(err);
-    dataResult.set(err.message);
+    alert(err.message);
   };
 
   const dataSample = async () => {
@@ -46,8 +41,6 @@
         path: `/library/detail/${e.id}/`,
       });
     });
-
-    dataResult.set(displayData);
   };
 
   function locationSuccess(position) {
@@ -61,34 +54,25 @@
 </script>
 
 <Page name="home">
-  <StandardHeader title="Library List" />
-  <div class="searchbar-container make-center">
-    <List noHairlinesMd>
-      <ListInput type="text" placeholder="Your name" clearButton>
-        <Icon f7="search" slot="media" />
-      </ListInput>
-    </List>
-  </div>
-  <Row class="search-list searchbar-found">
-    {#if typeof $dataResult == "object"}
-      {#if $dataResult.length == 0}
-        <div class="make-center">
-          <Preloader color="multi" />
-        </div>
-      {/if}
-      {#each $dataResult as sample}
-        <Col width="100" medium="50">
-          <ContentCard data={sample} position={$geoData} />
-        </Col>
-      {/each}
-    {:else}
-      {$dataResult}
-    {/if}
-  </Row>
+  <StandardHeader title="Library Map" />
+  <Block strong>
+    <div class="map-wrap">
+      <Map
+        bind:this={mapComponent}
+        accessToken={mapboxToken}
+        style="mapbox://styles/warmoa/cl3wwp1qa000414mqrf1cx8b4"
+        {center}
+        bind:zoom
+      >
+        <AllMarker bind:displayData />
+      </Map>
+    </div>
+  </Block>
 </Page>
 
 <style>
-  .searchbar-container {
-    width: 50%;
+  .map-wrap {
+    width: 100%;
+    height: 70vh;
   }
 </style>
