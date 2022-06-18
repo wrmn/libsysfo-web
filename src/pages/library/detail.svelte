@@ -5,16 +5,15 @@
     Toolbar,
     Link,
     Block,
-    Button,
     Tabs,
     Tab,
-    Col,
     Row,
   } from "framework7-svelte";
 
   import StandardHeader from "../../components/standardHeader.svelte";
   import Gallery from "./detail/gallery.svelte";
   import Info from "./detail/info.svelte";
+  import Direction from "./detail/_Direction.svelte";
 
   import { onDestroy, onMount } from "svelte";
   import { Map, Marker, controls } from "@beyonk/svelte-mapbox";
@@ -25,18 +24,35 @@
   const mapboxToken =
     "pk.eyJ1Ijoid2FybW9hIiwiYSI6ImNsM3U0dThidDFlaTgzYmx0cTN6N2c2ZG8ifQ.UE81Ntp9JdS7LeYZRXjCvg";
   let center = { lat: -0.9345808, lng: 100.37 };
-  let mapComponent, lat, lng;
+  let mapComponent;
+  let lat = 0;
+  let lng = 0;
+  let loc = {
+    src: [0, 0],
+    dst: [0, 0],
+  };
+
   let zoom = 11.5;
 
-  const { GeolocateControl, NavigationControl } = controls;
+  const { NavigationControl } = controls;
 
   onMount(() => {
+    navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
     dataSample(f7route.params["libraryId"]);
   });
 
   onDestroy(() => {
     libraryResult.set([]);
   });
+
+  function locationSuccess(position) {
+    loc.src = [position.coords.longitude, position.coords.latitude];
+  }
+
+  function locationError(error) {
+    const message = error.message;
+    alert(message);
+  }
 
   var handleError = function (err) {
     console.warn(err);
@@ -55,16 +71,23 @@
       `https://young-castle-31877.herokuapp.com/library/${id}`
     ).catch(handleError);
     const msg = await response.json();
-
     libraryResult.set(msg);
-    lat = msg.coordinate.latitude;
-    lng = msg.coordinate.longitude;
-    mapComponent.setCenter([lng, lat]);
+    loc.dst = [msg.coordinate.longitude, msg.coordinate.latitude];
+
+    mapComponent.setCenter(loc.dst);
     zoom = 15;
   };
 
   function resizes() {
     mapComponent.resize();
+  }
+
+  async function getDirection() {
+    const query = await fetch(
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${loc.src[0]},${loc.src[1]};${loc.dst[0]},${loc.dst[1]}?steps=true&geometries=geojson&access_token=${mapboxToken}`,
+      { method: "GET" }
+    );
+    return await query.json();
   }
 </script>
 
@@ -101,33 +124,18 @@
     {/if}
     <Tab id="tab-3">
       <Block strong>
-        <Row>
-          <Col width="100" medium="20">
-            <Button
-              fill
-              raised
-              on:click={() => {
-                console.log("nnice");
-              }}>nice</Button
-            >
-          </Col>
-          <Col width="100" medium="80">
-            <div class="map-wrap">
-              <Map
-                bind:this={mapComponent}
-                accessToken={mapboxToken}
-                {center}
-                bind:zoom
-              >
-                <NavigationControl />
-                <GeolocateControl
-                  on:geolocate={(e) => console.log("geolocated", e.detail)}
-                />
-                <Marker bind:lat bind:lng />
-              </Map>
-            </div>
-          </Col>
-        </Row>
+        <div class="map-wrap">
+          <Map
+            bind:this={mapComponent}
+            accessToken={mapboxToken}
+            style="mapbox://styles/warmoa/cl3wwp1qa000414mqrf1cx8b4"
+            {center}
+            bind:zoom
+          >
+            <Direction dir={getDirection()} coords={loc} />
+            <NavigationControl />
+          </Map>
+        </div>
       </Block>
     </Tab>
   </Tabs>
@@ -136,6 +144,6 @@
 <style>
   .map-wrap {
     width: 100%;
-    height: 75vh;
+    height: 70vh;
   }
 </style>

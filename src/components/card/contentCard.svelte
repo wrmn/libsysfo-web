@@ -9,7 +9,7 @@
     let fromPoint = turf.point(from);
     let toPoint = turf.point([to.longitude, to.latitude]);
 
-    return turf.distance(fromPoint, toPoint, "kilometers");
+    return turf.distance(fromPoint, toPoint);
   };
 </script>
 
