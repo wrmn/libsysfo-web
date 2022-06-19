@@ -1,4 +1,4 @@
-.card {
+.my-card {
   width: 96%;
   bottom: -10%;
   margin-left: auto;
@@ -13,12 +13,12 @@
   );
 }
 
-.card .button-container {
+.my-card .button-container {
   bottom: 10px;
   position: absolute;
 }
 
-.card .info-container {
+.my-card .info-container {
   bottom: 10px;
   padding: 10px 10px 0px 45%;
   width: 50%;
@@ -36,7 +36,7 @@
   top: -6px;
 }
 
-.card > img {
+.my-card > img {
   position: absolute;
   top: 5%;
   left: -5%;

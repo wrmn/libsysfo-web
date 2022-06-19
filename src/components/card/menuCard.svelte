@@ -4,7 +4,7 @@
 </script>
 
 <Card class="elevation-24">
-  <div class="card card-local">
+  <div class="my-card card-local">
     <div class="border" />
     <img src={data.image} alt="" />
     <div class="button-container button-container-local">
@@ -35,7 +35,7 @@
     min-height: 200px;
   }
 
-  .card > img {
+  .my-card > img {
     width: 90%;
     position: absolute;
     top: -10%;

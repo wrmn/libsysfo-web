@@ -14,7 +14,7 @@
 </script>
 
 <Card class="elevation-24">
-  <div class="card card-local">
+  <div class="my-card card-local">
     <div class="border" />
     <img src={data.image} alt="" />
     <div class="info-container">

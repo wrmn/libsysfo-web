@@ -4,7 +4,7 @@
 </script>
 
 <Card class="elevation-24">
-  <div class="card card-local">
+  <div class="my-card card-local">
     <div class="border" />
     <Row>
       <Col width="100" medium="50">

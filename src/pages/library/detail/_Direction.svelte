@@ -52,6 +52,7 @@
     }
     return zoom;
   }
+  
   async function directions(meth) {
     let data;
     if (meth == "driving") {

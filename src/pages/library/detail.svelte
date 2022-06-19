@@ -70,7 +70,7 @@
 
   async function getDirection(meth) {
     // NOTE: change this line for custom location
-    loc.src = [80.46084726822548, -0.915438492909816];
+    // loc.src = [80.46084726822548, -0.915438492909816];
 
     const query = await fetch(
       `https://api.mapbox.com/directions/v5/mapbox/${meth}/${loc.src[0]},${loc.src[1]};${loc.dst[0]},${loc.dst[1]}?steps=true&geometries=geojson&access_token=${mapboxToken}`,
