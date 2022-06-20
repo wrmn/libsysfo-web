@@ -1,6 +1,12 @@
 <script>
+  import * as turf from "@turf/turf";
+  import Guide from "./_Guide.svelte";
+
   import {
     List,
+    Icon,
+    Row,
+    Col,
     ListItem,
     Searchbar,
     Card,
@@ -10,52 +16,73 @@
     CardFooter,
     Link,
   } from "framework7-svelte";
+  import {
+    routeResult,
+    routeIndex,
+    dataResult,
+    guideResult,
+  } from "../../../stores/data";
   import { getContext } from "svelte";
   import { contextKey } from "@beyonk/svelte-mapbox";
-  import { routeResult } from "../../../stores/data";
   import { onDestroy, onMount } from "svelte";
-  import * as turf from "@turf/turf";
 
   const { getMap, getMapbox } = getContext(contextKey);
   const map = getMap();
   const mapbox = getMapbox();
-
   const mapboxToken = import.meta.env.VITE_MAPBOX_KEY;
-  export let displayData = [];
+
+  let resolveData = [];
   let mapMarker = [];
   let src = [];
   let isHide = true;
   let isCardHide = true;
   let isMarkerHide = true;
+  let isGuideHide = true;
   let srcPoint;
 
+  // NOTE: Location
   onMount(() => {
     navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
-    allMarker();
-    setTimeout(displayAllMarker(), 1000);
+    markerData();
   });
 
   onDestroy(() => {
     routeResult.set([]);
+    guideResult.set([]);
   });
 
-  function locationSuccess(position) {
+  const locationSuccess = (position) => {
     src = [position.coords.longitude, position.coords.latitude];
     srcPoint = new mapbox.Marker().setLngLat(src).addTo(map);
-  }
+  };
 
-  function locationError(error) {
+  const locationError = (error) => {
     const message = error.message;
     alert(message);
-  }
+  };
 
-  var handleError = function (err) {
+  const handleError = (err) => {
     console.warn(err);
   };
 
-  function allMarker() {
+  // NOTE: Marker
+  const markerData = async () => {
+    const response = await fetch(
+      "https://young-castle-31877.herokuapp.com/library"
+    ).catch(handleError);
+    const msg = await response.json();
+    msg.data.forEach((e) => {
+      resolveData.push({
+        header: "lihat perpustakaan",
+        address: e.address,
+        image: e.images.main,
+        coordinate: e.coordinate,
+        content: e.name,
+        path: `/library/detail/${e.id}/`,
+      });
+    });
     isMarkerHide = false;
-    displayData.forEach((e) => {
+    resolveData.forEach((e, i) => {
       mapMarker.push(
         new mapbox.Marker()
           .setLngLat([e.coordinate.longitude, e.coordinate.latitude])
@@ -65,53 +92,42 @@
               maxWidth: "900px",
             })
               .setHTML(
-                `<a class='button button-fill button-round'>${e.content}</a>`
+                `<a href=${e.path} class='button button-fill button-round'>${e.content}</a>`
               )
               .on("open", () => {
                 routeResult.set(e);
+                routeIndex.set(i);
                 isCardHide = false;
+                isGuideHide = false;
+                guideResult.set([]);
+                isGuideHide = true;
               })
           )
       );
     });
-  }
+    dataResult.set(resolveData);
+    displayAllMarker();
+  };
 
-  function toggleMarker() {
-    isMarkerHide = !isMarkerHide;
-    if (isMarkerHide) {
-      removeAllMarker();
-    } else {
-      displayAllMarker();
-    }
-  }
-
-  function displayAllMarker() {
+  const displayAllMarker = () => {
     mapMarker.forEach((e) => {
       e.addTo(map);
     });
-  }
+  };
 
-  function removeAllMarker() {
+  const removeAllMarker = () => {
     mapMarker.forEach((e) => {
       e.remove();
     });
-  }
-
-  map.on("click", () => {
-    isHide = true;
-    if (isMarkerHide) {
-      toggleMarker();
-    }
-  });
-
-  function toggleVisibility() {
-    isHide = !isHide;
-  }
+  };
 
   const showMarker = (data, i) => {
     isHide = true;
     isCardHide = false;
     isMarkerHide = true;
+    isGuideHide = true;
+    guideResult.set([]);
+    console.log(isGuideHide);
     removeAllMarker();
     mapMarker[i].addTo(map);
     mapMarker[i].togglePopup();
@@ -123,24 +139,17 @@
     });
   };
 
-  function measureZoom(distance) {
-    let init = 0.149;
-    let multipler = 0.149;
-    let zoom = 27.5;
-    let rep = 0;
-    while (distance > init) {
-      init += multipler * 0.25;
-      zoom -= 0.25;
-      rep += 1;
-      if (rep == 4) {
-        rep = 0;
-        multipler = init;
-      }
-    }
-    return zoom;
-  }
-
-  async function directions(meth, dst) {
+  // NOTE: Route
+  const directions = async (meth) => {
+    isMarkerHide = true;
+    removeAllMarker();
+    isCardHide = true;
+    isGuideHide = false;
+    mapMarker[$routeIndex].addTo(map);
+    const dst = [
+      $routeResult.coordinate.longitude,
+      $routeResult.coordinate.latitude,
+    ];
     const response = await fetch(
       `https://api.mapbox.com/directions/v5/mapbox/${meth}/${src[0]},${src[1]};${dst[0]},${dst[1]}?steps=true&geometries=geojson&access_token=${mapboxToken}`,
       { method: "GET" }
@@ -165,6 +174,7 @@
       }, 3000);
       return;
     }
+    guideResult.set(data.routes[0].legs[0].steps);
     const route = data.routes[0].geometry.coordinates;
     const mid = turf.midpoint(turf.point(src), turf.point(dst)).geometry
       .coordinates;
@@ -200,18 +210,45 @@
     }
 
     gotoLoc(mid, measureZoom(data.routes[0].distance));
-  }
+  };
 
-  function gotoLoc(coords, lvlZoom = 15) {
+  const gotoLoc = (coords, lvlZoom = 15) => {
     map.flyTo({
       center: coords,
       zoom: lvlZoom,
     });
-  }
+  };
 
-  function removeRoute() {
-    if (map.getLayer("route")) map.removeLayer("route");
-  }
+  // NOTE: Utility
+  const toggleVisibility = () => {
+    isHide = !isHide;
+  };
+
+  const measureZoom = (distance) => {
+    let init = 0.149;
+    let multipler = 0.149;
+    let zoom = 27.5;
+    let rep = 0;
+    while (distance > init) {
+      init += multipler * 0.25;
+      zoom -= 0.25;
+      rep += 1;
+      if (rep == 4) {
+        rep = 0;
+        multipler = init;
+      }
+    }
+    return zoom;
+  };
+
+  const toggleMarker = () => {
+    isMarkerHide = !isMarkerHide;
+    if (isMarkerHide) {
+      removeAllMarker();
+    } else {
+      displayAllMarker();
+    }
+  };
 </script>
 
 <div class="searchbar-container">
@@ -230,7 +267,7 @@
     <ListItem title="Nothing found" />
   </List>
   <List class="search-list searchbar-found">
-    {#each displayData as data, i}
+    {#each $dataResult as data, i}
       <ListItem
         link="#"
         title={data.content.replace(/\w\S*/g, (w) =>
@@ -248,7 +285,7 @@
       valign="bottom"
       style={`
       background-image: url(${$routeResult.image});
-      height:100px;
+      height:200px;
       background-size: contain;
       text-transform: capitalize;
       background-repeat: no-repeat;
@@ -259,37 +296,55 @@
       ></CardHeader
     >
     <CardFooter>
-      <Link href={$routeResult.path}>Details</Link>
       <List accordionList>
         <ListItem accordionItem title="Direction">
           <AccordionContent>
-            <Button
-              fill
-              raised
-              on:click={() =>
-                directions("walking", [
-                  $routeResult.coordinate.longitude,
-                  $routeResult.coordinate.latitude,
-                ])}>walking</Button
+            <Button fill raised on:click={() => directions("walking")}
+              >walking</Button
             >
-            <Button
-              fill
-              raised
-              on:click={() =>
-                directions("driving", [
-                  $routeResult.coordinate.longitude,
-                  $routeResult.coordinate.latitude,
-                ])}>driving</Button
+            <Button fill raised on:click={() => directions("driving")}
+              >driving</Button
             >
           </AccordionContent>
         </ListItem>
+        <ListItem>
+          <Link href={$routeResult.path}>Details</Link>
+        </ListItem>
       </List>
-      <!-- <Link>Direction</Link>
-      <Link>Direction</Link> -->
     </CardFooter>
   </Card>
 </div>
+<div class="guide-container the-action" class:hide={isGuideHide}>
+  <Row>
+    <Col width="80">
+      <Button
+        fill
+        raised
+        on:click={() => {
+          guideResult.set($guideResult.slice(1, $guideResult.length));
+        }}
+      >
+        <Icon f7="checkmark" />
+      </Button>
+    </Col>
+    <Col width="20">
+      <Button
+        fill
+        raised
+        on:click={() => {
+          guideResult.set([]);
+          isGuideHide = true;
+        }}
+      >
+        <Icon f7="xmark" />
+      </Button>
+    </Col>
 
+  </Row>
+</div>
+<div class:hide={isGuideHide} class="guide-container the-guide">
+  <Guide />
+</div>
 <div class="action-container">
   <List accordionList>
     <ListItem accordionItem title="Action">
@@ -298,7 +353,15 @@
         <Button fill raised on:click={() => toggleMarker()}>
           Toggle Marker
         </Button>
-        <Button fill raised on:click={() => removeRoute()}>Clear Route</Button>
+        <Button
+          fill
+          raised
+          on:click={() => {
+            if (map.getLayer("route")) map.removeLayer("route");
+            guideResult.set([]);
+            isGuideHide = true;
+          }}>Clear Route</Button
+        >
       </AccordionContent>
     </ListItem>
   </List>
@@ -324,9 +387,24 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 300px;
+    width: 200px;
   }
 
+  .guide-container {
+    position: absolute;
+    right: 0;
+    height: 300px;
+    width: 300px;
+    overflow: auto;
+  }
+
+  .the-action {
+    top: 10px;
+  }
+
+  .the-guide {
+    top: 50px;
+  }
   .action-container {
     position: absolute;
     bottom: 0;

@@ -4,10 +4,16 @@
   import {
     f7,
     Button,
+    Row,
+    Col,
+    Icon,
     List,
     ListItem,
     AccordionContent,
   } from "framework7-svelte";
+  import { guideResult } from "../../../stores/data";
+  import Guide from "../map/_Guide.svelte";
+
   import * as turf from "@turf/turf";
   export let dirWalking;
   export let dirDriving;
@@ -15,6 +21,8 @@
     src: [0, 0],
     dst: [0, 0],
   };
+
+  let isGuideHide = true;
 
   const { getMap, getMapbox } = getContext(contextKey);
   const map = getMap();
@@ -52,7 +60,7 @@
     }
     return zoom;
   }
-  
+
   async function directions(meth) {
     let data;
     if (meth == "driving") {
@@ -80,6 +88,8 @@
       }, 3000);
       return;
     }
+    guideResult.set(data.routes[0].legs[0].steps);
+    isGuideHide = false;
     const route = data.routes[0].geometry.coordinates;
     const mid = turf.midpoint(turf.point(coords.src), turf.point(coords.dst))
       .geometry.coordinates;
@@ -142,11 +152,61 @@
     </ListItem>
   </List>
 </div>
+<div class="guide-container the-action" class:hide={isGuideHide}>
+  <Row>
+    <Col width="80">
+      <Button
+        fill
+        raised
+        on:click={() => {
+          guideResult.set($guideResult.slice(1, $guideResult.length));
+        }}
+      >
+        <Icon f7="checkmark" />
+      </Button>
+    </Col>
+    <Col width="20">
+      <Button
+        fill
+        raised
+        on:click={() => {
+          guideResult.set([]);
+          isGuideHide = true;
+        }}
+      >
+        <Icon f7="xmark" />
+      </Button>
+    </Col>
+  </Row>
+</div>
+<div class:hide={isGuideHide} class="guide-container the-guide">
+  <Guide />
+</div>
 
 <style>
   .button-container {
     width: 40vw;
     max-width: 150px;
     padding-left: 30px;
+  }
+
+  .guide-container {
+    position: absolute;
+    right: 0;
+    height: 300px;
+    width: 300px;
+    overflow: auto;
+  }
+
+  .the-action {
+    top: 10px;
+  }
+
+  .the-guide {
+    top: 50px;
+  }
+
+  .hide {
+    visibility: hidden;
   }
 </style>
