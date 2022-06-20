@@ -79,15 +79,15 @@ export const mainMenu = readable([
     menus: [
       {
         name: "Frequently Asked Question",
-        link: "/faq/",
+        link: "/help/faq/",
         panelClose: true,
         view: ".view-main",
       },
       {
         name: "Contact",
-        link: "/contact/",
-        panelClose: false,
-        view: true,
+        link: "/help/contact/",
+        panelClose: true,
+        view: ".view-main",
       },
       {
         name: "About",
@@ -122,5 +122,107 @@ export const paperCards = readable([
     header: "Access",
     image: "./static/images/hero-10.svg",
     path: "/library/map/",
+  },
+]);
+
+export const contactContent = readable({
+  form: [
+    {
+      label: "Name",
+      type: "text",
+      placeholder: "Your Name",
+      icon: "house",
+    },
+    {
+      label: "E-mail (optional)",
+      type: "email",
+      placeholder: "Your E-mail",
+      icon: "envelope",
+    },
+    {
+      label: "Message",
+      type: "textarea",
+      placeholder: "YourMessage",
+      resizeable: true,
+      icon: false,
+    },
+  ],
+  button: [
+    {
+      link: "",
+      name: "envelope",
+      color: "theme",
+    },
+    {
+      link: "",
+      name: "phone",
+      color: "green",
+    },
+    {
+      link: "",
+      name: "logo_facebook",
+      color: "blue",
+    },
+  ],
+});
+
+export const developerContact = readable([
+  {
+    link: "",
+    name: "logo_github",
+    color: "theme",
+  },
+  {
+    link: "",
+    name: "logo_linkedin",
+    color: "lightblue",
+  },
+  {
+    link: "",
+    name: "logo_facebook",
+    color: "blue",
+  },
+]);
+
+export const faqItem = readable([
+  {
+    title: "Mencari perpustakaan",
+    category: "Perpustakaan",
+    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi tempora praesentium similique blanditiis, ab voluptates fugit. Ut, fugiat quidem doloremque nisi, pariatur, eum natus iusto blanditiis nulla doloribus eaque rem?",
+  },
+  {
+    title: "Route perpustakaan",
+    category: "Perpustakaan",
+    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi tempora praesentium similique blanditiis, ab voluptates fugit. Ut, fugiat quidem doloremque nisi, pariatur, eum natus iusto blanditiis nulla doloribus eaque rem?",
+  },
+  {
+    title: "Mencari buku",
+    category: "Buku",
+    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi tempora praesentium similique blanditiis, ab voluptates fugit. Ut, fugiat quidem doloremque nisi, pariatur, eum natus iusto blanditiis nulla doloribus eaque rem?",
+  },
+  {
+    title: "Mengajukan peminjaman buku",
+    category: "Buku",
+    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi tempora praesentium similique blanditiis, ab voluptates fugit. Ut, fugiat quidem doloremque nisi, pariatur, eum natus iusto blanditiis nulla doloribus eaque rem?",
+  },
+  {
+    title: "Mencari jurnal",
+    category: "Jurnal",
+    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi tempora praesentium similique blanditiis, ab voluptates fugit. Ut, fugiat quidem doloremque nisi, pariatur, eum natus iusto blanditiis nulla doloribus eaque rem?",
+  },
+  {
+    title: "Mengajukan permintaan akses",
+    category: "Jurnal",
+    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi tempora praesentium similique blanditiis, ab voluptates fugit. Ut, fugiat quidem doloremque nisi, pariatur, eum natus iusto blanditiis nulla doloribus eaque rem?",
+  },
+  {
+    title: "Cara mendaftar akun",
+    category: "Akun",
+    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi tempora praesentium similique blanditiis, ab voluptates fugit. Ut, fugiat quidem doloremque nisi, pariatur, eum natus iusto blanditiis nulla doloribus eaque rem?",
+  },
+  {
+    title: "Cara mengatur akun",
+    category: "Akun",
+    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi tempora praesentium similique blanditiis, ab voluptates fugit. Ut, fugiat quidem doloremque nisi, pariatur, eum natus iusto blanditiis nulla doloribus eaque rem?",
   },
 ]);

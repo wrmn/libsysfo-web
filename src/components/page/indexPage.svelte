@@ -28,9 +28,11 @@
     max-width: 500px;
     font-size: 3em;
     font-weight: 500;
+
+    display: flex;
+    justify-content: center;
   }
   .image-container {
-    padding-left: 25%;
-    width: 50%;
+    text-align: center;
   }
 </style>

@@ -1,41 +1,43 @@
 <script>
-  import { Page, Navbar, Block, BlockTitle } from "framework7-svelte";
+  import { Page, Block, Row, Col, Icon, Button } from "framework7-svelte";
+
+  import IndexPage from "../../components/page/indexPage.svelte";
+  import { developerContact } from "../../stores/main";
 </script>
 
-<Page>
-  <Navbar title="About" backLink="Back" />
-  <BlockTitle>About My App</BlockTitle>
-  <Block strong>
-    <p>
-      Fugiat perspiciatis excepturi, soluta quod non ullam deleniti. Nobis sint
-      nemo consequuntur, fugiat. Eius perferendis animi autem incidunt vel quod
-      tenetur nostrum, voluptate omnis quasi quidem illum consequuntur, a,
-      quisquam.
-    </p>
-    <p>
-      Laudantium neque magnam vitae nemo quam commodi, in cum dolore obcaecati
-      laborum, excepturi harum, optio qui, consequuntur? Obcaecati dolor sequi
-      nesciunt culpa quia perspiciatis, reiciendis ex debitis, ut tenetur alias.
-    </p>
-  </Block>
-  <Block strong>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni molestiae
-      laudantium dignissimos est nobis delectus nemo ea alias voluptatum
-      architecto, amet similique, saepe iste consectetur in repellat ut minus
-      quibusdam!
-    </p>
-    <p>
-      Molestias et distinctio porro nesciunt ratione similique, magni doloribus,
-      rerum nobis, aliquam quae reiciendis quasi modi. Nam a recusandae, fugiat
-      in ea voluptates fuga eius, velit corrupti reprehenderit dignissimos
-      consequatur!
-    </p>
-    <p>
-      Blanditiis, cumque quo adipisci. Molestiae, dolores dolorum quos
-      doloremque ipsa ullam eligendi commodi deserunt doloribus inventore magni?
-      Ea mollitia veniam nostrum nihil, iusto doloribus a at! Ea molestiae ullam
-      delectus!
-    </p>
-  </Block>
+<Page name="home">
+  <IndexPage title="About" heroImg="./static/images/hero-12.svg">
+    <span slot="title">
+      <div>TENTANG</div>
+      <div>LIBRARY INFORMATION SYSTEM</div>
+    </span>
+    <span slot="content">
+      <Block strong>
+        <h2>Tentang Aplikasi</h2>
+        <p>
+          Library Information system adalah aplikasi yang dibangun untuk
+          memudahkan pencarian perpustakaan, buku, dan paper yang ada di
+          sekitar. Aplikasi ini dibangun pada platform web dan mobile yang bisa
+          diakses siapa saja.
+        </p>
+        <p>
+          Aplikasi menggunakan bahasa javascript dengan svelte sebagai library
+          component, framework7 sebagai framework dan mapbox sebagai peta.
+          Aplikasi Dibuat dengan tujuan sebagai tugas akhir pengembang.
+        </p>
+      </Block>
+      <Block strong>
+        <h2>Kontak Pengembang</h2>
+        <Row>
+          {#each $developerContact as e}
+            <Col width="15">
+              <Button round>
+                <Icon f7={e.name} color={e.color} />
+              </Button>
+            </Col>
+          {/each}
+        </Row>
+      </Block>
+    </span>
+  </IndexPage>
 </Page>

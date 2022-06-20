@@ -14,10 +14,10 @@
       case /turn right/gim.test(inst):
         icon = "arrow_turn_up_right";
         break;
-      case /bear left/gim.test(inst):
+      case /bear left|keep left/gim.test(inst):
         icon = "arrow_up_left";
         break;
-      case /bear right/gim.test(inst):
+      case /bear right|keep right/gim.test(inst):
         icon = "arrow_up_right";
         break;
       case /roundabout/gim.test(inst):
@@ -38,8 +38,8 @@
 <List mediaList>
   {#each $guideResult as data}
     <ListItem
-      title={data.maneuver.instruction}
-      text={distanceMeasure(data.distance)}
+      text={data.maneuver.instruction}
+      title={distanceMeasure(data.distance)}
     >
       <i class="icon f7-icons" slot="media" style=""
         >{iconData(data.maneuver.instruction)}</i

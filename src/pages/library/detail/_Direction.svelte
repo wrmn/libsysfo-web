@@ -192,18 +192,18 @@
 
   .guide-container {
     position: absolute;
-    right: 0;
-    height: 300px;
+    right: 10px;
+    height: 100px;
     width: 300px;
     overflow: auto;
   }
 
   .the-action {
-    top: 10px;
+    bottom: 50px;
   }
 
   .the-guide {
-    top: 50px;
+    bottom: 10px;
   }
 
   .hide {

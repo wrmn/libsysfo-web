@@ -1,7 +1,11 @@
 import HomePage from "../pages/home.svelte";
-import AboutPage from "../pages/help/about.svelte";
 
-//library page import
+//NOTE:Help
+import AboutPage from "../pages/help/about.svelte";
+import FaqPage from "../pages/help/faq.svelte";
+import ContactPage from "../pages/help/contact.svelte";
+
+//NOTE:Library
 import LibraryIndexPage from "../pages/library/index.svelte";
 import LibraryMapPage from "../pages/library/map.svelte";
 import LibraryListPage from "../pages/library/list.svelte";
@@ -50,8 +54,21 @@ var routes = [
   },
 
   {
-    path: "/help/about/",
-    component: AboutPage,
+    path: "/help/",
+    routes: [
+      {
+        path: "faq/",
+        component: FaqPage,
+      },
+      {
+        path: "contact/",
+        component: ContactPage,
+      },
+      {
+        path: "about/",
+        component: AboutPage,
+      },
+    ],
   },
   {
     path: "(.*)",
