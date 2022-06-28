@@ -66,7 +66,7 @@ export const mainMenu = readable([
       },
       {
         name: "Settings",
-        link: "/settings/",
+        link: "/profile/settings/",
         panelClose: false,
         view: true,
       },

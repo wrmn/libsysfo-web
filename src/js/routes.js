@@ -11,6 +11,10 @@ import LibraryMapPage from "../pages/library/map.svelte";
 import LibraryListPage from "../pages/library/list.svelte";
 import LibraryDetailPage from "../pages/library/detail.svelte";
 
+// NOTE: Profile
+import ProfileIndexPage from "../pages/profile/index.svelte";
+import ProfileSettingsPage from "../pages/profile/settings.svelte";
+
 import BookIndexPage from "../pages/book/index.svelte";
 import PaperIndexPage from "../pages/paper/index.svelte";
 import DynamicRoutePage from "../pages/dynamic-route.svelte";
@@ -52,7 +56,16 @@ var routes = [
     path: "/paper/",
     component: PaperIndexPage,
   },
-
+  {
+    path: "/profile/",
+    component: ProfileIndexPage,
+    routes: [
+      {
+        path: "settings/",
+        component: ProfileSettingsPage,
+      },
+    ],
+  },
   {
     path: "/help/",
     routes: [
