@@ -31,5 +31,6 @@ const store = createStore({
       state.products = [...state.products, product];
     },
   },
-})
+});
+
 export default store;

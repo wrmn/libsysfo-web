@@ -8,72 +8,26 @@
     List,
     ListInput,
     Button,
-    Icon,
     LoginScreen,
   } from "framework7-svelte";
-  import Framework7, { getDevice } from "framework7";
+  import { loginStats } from "../../stores/data";
 
-  export let loginScreenOpened = false;
-  export let loginStats;
-  const device = getDevice();
+  export let registerScreenOpened = false;
   let username = "";
   let password = "";
 
   function signIn() {
     f7.dialog.alert(`Username: ${username}<br>Password: ${password}`, () => {
       f7.loginScreen.close();
-      loginStats = true;
+      loginStats.set(true);
     });
   }
-
-  var handleError = function (err) {
-    console.warn(err);
-  };
-
-  const login = async (data) => {
-    console.log(data)
-    const request = new Request("http://localhost:5000/profile/login/google", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const response = await fetch(request).catch(handleError);
-    const msg = await response.json();
-    console.log(msg);
-  };
-
-  function handleCredentialResponse(response) {
-    login(response);
-  }
-
-  const initLogin = () => {
-    google.accounts.id.initialize({
-      client_id: import.meta.env.VITE_GOOGLE_CLIENT,
-      callback: handleCredentialResponse,
-    });
-    google.accounts.id.renderButton(document.getElementById("buttonDiv"), {
-      theme: "filled_black",
-      size: "large",
-      shape: "pill",
-    });
-  };
 </script>
-
-<svelte:head>
-  <script
-    src="https://accounts.google.com/gsi/client"
-    async
-    defer
-    on:load={initLogin}></script>
-</svelte:head>
 
 <LoginScreen
   class="demo-login-screen"
-  opened={loginScreenOpened}
-  onLoginScreenClosed={() => (loginScreenOpened = false)}
+  opened={registerScreenOpened}
+  onLoginScreenClosed={() => (registerScreenOpened = false)}
 >
   <Page loginScreen>
     <Row>
@@ -96,13 +50,24 @@
         <div class="main-image title">Library Information System</div>
       </Col>
       <Col width="100" medium="30">
-        <LoginScreenTitle>Login</LoginScreenTitle>
-        {#if !device.android}
-          <h3>Login with</h3>
-          <div id="buttonDiv" />
-        {/if}
+        <LoginScreenTitle>Register</LoginScreenTitle>
         <h3>Account login</h3>
         <List form>
+          <ListInput
+            label="Email"
+            type="email"
+            placeholder="Your email"
+            value={username}
+            onInput={(e) => (username = e.target.value)}
+          />
+
+          <ListInput
+            label="Name"
+            type="text"
+            placeholder="Your Name"
+            value={username}
+            onInput={(e) => (username = e.target.value)}
+          />
           <ListInput
             label="Username"
             type="text"
@@ -113,13 +78,19 @@
           <ListInput
             label="Password"
             type="password"
-            placeholder="Your password"
+            placeholder="Your Password"
+            value={username}
+            onInput={(e) => (username = e.target.value)}
+          />
+          <ListInput
+            label="Password"
+            type="password"
+            placeholder="Retype Your password"
             value={password}
             onInput={(e) => (password = e.target.value)}
           />
         </List>
-        <Button fill onClick={signIn}>Sign In</Button>
-        <Button onClick={signIn}>Register</Button>
+        <Button fill onClick={signIn}>Register</Button>
       </Col>
       <Col width="100" medium="20" />
     </Row>

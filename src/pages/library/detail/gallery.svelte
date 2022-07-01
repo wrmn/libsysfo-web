@@ -16,10 +16,7 @@
 <Row>
   {#each photos as link, i}
     <Col width="50" medium="25">
-      <div
-        on:click={() => pageDark.open(i)}
-        class="image-container"
-      >
+      <div on:click={() => pageDark.open(i)} class="image-container">
         <img src={link} alt="" />
       </div>
     </Col>

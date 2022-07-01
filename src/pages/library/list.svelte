@@ -1,7 +1,6 @@
 <script>
   import {
     Page,
-    Navbar,
     List,
     ListInput,
     Row,
@@ -13,11 +12,13 @@
   import ContentCard from "../../components/card/contentCard.svelte";
   import StandardHeader from "../../components/standardHeader.svelte";
   import { dataResult, geoData } from "../../stores/data";
+  import * as turf from "@turf/turf";
 
   let displayData = [];
 
   onMount(() => {
-    dataSample();
+    dataResult.set([]);
+    getData();
     navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
   });
 
@@ -31,18 +32,18 @@
     dataResult.set(err.message);
   };
 
-  const dataSample = async () => {
-    const response = await fetch(
-      "https://young-castle-31877.herokuapp.com/library"
-    ).catch(handleError);
+  const getData = async () => {
+    const response = await fetch("http://localhost:5000/library").catch(
+      handleError
+    );
     const msg = await response.json();
-    msg.data.forEach((e) => {
+    msg.data.library.forEach((e) => {
       displayData.push({
         header: "lihat perpustakaan",
         address: e.address,
-        image: e.images.main,
+        image: e.imagesMain,
         coordinate: e.coordinate,
-        content: e.name,
+        name: e.name,
         path: `/library/detail/${e.id}/`,
       });
     });
@@ -58,17 +59,17 @@
     const message = error.message;
     alert(message);
   }
+
+  const measureDistance = (from, to) => {
+    let fromPoint = turf.point(from);
+    let toPoint = turf.point(to);
+
+    return turf.distance(fromPoint, toPoint);
+  };
 </script>
 
 <Page name="home">
   <StandardHeader title="Library List" />
-  <div class="searchbar-container make-center">
-    <List noHairlinesMd>
-      <ListInput type="text" placeholder="Your name" clearButton>
-        <Icon f7="search" slot="media" />
-      </ListInput>
-    </List>
-  </div>
   <Row class="search-list searchbar-found">
     {#if typeof $dataResult == "object"}
       {#if $dataResult.length == 0}
@@ -78,7 +79,16 @@
       {/if}
       {#each $dataResult as sample}
         <Col width="100" medium="50">
-          <ContentCard data={sample} position={$geoData} />
+          <ContentCard data={sample}>
+            <span slot="content">
+              {sample.address}
+              <br />
+              {#if $geoData}
+                <Icon f7="map_pin_ellipse" slot="media" size="15px" />
+                {measureDistance($geoData, sample.coordinate).toFixed(2)} Km
+              {/if}
+            </span>
+          </ContentCard>
         </Col>
       {/each}
     {:else}
@@ -86,9 +96,3 @@
     {/if}
   </Row>
 </Page>
-
-<style>
-  .searchbar-container {
-    width: 50%;
-  }
-</style>

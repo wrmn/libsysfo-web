@@ -67,42 +67,40 @@
 
   // NOTE: Marker
   const markerData = async () => {
-    const response = await fetch(
-      "https://young-castle-31877.herokuapp.com/library"
-    ).catch(handleError);
+    const response = await fetch("http://localhost:5000/library").catch(
+      handleError
+    );
     const msg = await response.json();
-    msg.data.forEach((e) => {
+    msg.data.library.forEach((e) => {
       resolveData.push({
         header: "lihat perpustakaan",
         address: e.address,
-        image: e.images.main,
+        image: e.imagesMain,
         coordinate: e.coordinate,
-        content: e.name,
+        name: e.name,
         path: `/library/detail/${e.id}/`,
       });
     });
     isMarkerHide = false;
     resolveData.forEach((e, i) => {
       mapMarker.push(
-        new mapbox.Marker()
-          .setLngLat([e.coordinate.longitude, e.coordinate.latitude])
-          .setPopup(
-            new mapbox.Popup({
-              closeButton: false,
-              maxWidth: "900px",
+        new mapbox.Marker().setLngLat(e.coordinate).setPopup(
+          new mapbox.Popup({
+            closeButton: false,
+            maxWidth: "900px",
+          })
+            .setHTML(
+              `<a href=${e.path} class='button button-fill button-round'>${e.name}</a>`
+            )
+            .on("open", () => {
+              routeResult.set(e);
+              routeIndex.set(i);
+              isCardHide = false;
+              isGuideHide = false;
+              guideResult.set([]);
+              isGuideHide = true;
             })
-              .setHTML(
-                `<a href=${e.path} class='button button-fill button-round'>${e.content}</a>`
-              )
-              .on("open", () => {
-                routeResult.set(e);
-                routeIndex.set(i);
-                isCardHide = false;
-                isGuideHide = false;
-                guideResult.set([]);
-                isGuideHide = true;
-              })
-          )
+        )
       );
     });
     dataResult.set(resolveData);
@@ -127,14 +125,12 @@
     isMarkerHide = true;
     isGuideHide = true;
     guideResult.set([]);
-    console.log(isGuideHide);
     removeAllMarker();
     mapMarker[i].addTo(map);
     mapMarker[i].togglePopup();
     routeResult.set(data);
-    console.log($routeResult);
     map.flyTo({
-      center: [data.coordinate.longitude, data.coordinate.latitude],
+      center: data.coordinate,
       zoom: 17,
     });
   };
@@ -146,10 +142,7 @@
     isCardHide = true;
     isGuideHide = false;
     mapMarker[$routeIndex].addTo(map);
-    const dst = [
-      $routeResult.coordinate.longitude,
-      $routeResult.coordinate.latitude,
-    ];
+    const dst = $routeResult.coordinate;
     const response = await fetch(
       `https://api.mapbox.com/directions/v5/mapbox/${meth}/${src[0]},${src[1]};${dst[0]},${dst[1]}?steps=true&geometries=geojson&access_token=${mapboxToken}`,
       { method: "GET" }
@@ -186,7 +179,6 @@
         coordinates: route,
       },
     };
-
     if (map.getSource("route")) {
       map.getSource("route").setData(geojson);
     } else {
@@ -270,7 +262,7 @@
     {#each $dataResult as data, i}
       <ListItem
         link="#"
-        title={data.content.replace(/\w\S*/g, (w) =>
+        title={data.name.replace(/\w\S*/g, (w) =>
           w.replace(/^\w/, (c) => c.toUpperCase())
         )}
         on:click={() => showMarker(data, i)}
@@ -292,7 +284,7 @@
       background-position: center;
     `}
       ><span style="background-color: rgba(0,0,0,.7); color:white"
-        >{$routeResult.content}</span
+        >{$routeResult.name}</span
       ></CardHeader
     >
     <CardFooter>

@@ -21,6 +21,7 @@
   import store from "../js/store";
 
   import { darkTheme, mainMenu } from "../stores/main";
+  import { switchTheme } from "../js/util";
 
   const device = getDevice();
   // Framework7 Parameters
@@ -67,15 +68,6 @@
   if (localStorage.getItem("theme") === "dark") {
     darkTheme.set(true);
   }
-
-  const switchTheme = () => {
-    const theme = localStorage.getItem("theme");
-    const opposite = theme === "dark" ? "light" : "dark";
-    document.documentElement.classList.add(opposite);
-    document.documentElement.classList.remove(theme);
-    localStorage.setItem("theme", opposite);
-    darkTheme.set(!$darkTheme);
-  };
 </script>
 
 <svelte:head>
@@ -100,7 +92,12 @@
       <Page>
         <Navbar title="Menu">
           <NavRight>
-            <Button on:click={switchTheme}>
+            <Button
+              on:click={() => {
+                switchTheme();
+                darkTheme.set(!$darkTheme);
+              }}
+            >
               <i class="icon f7-icons color-custom">
                 {#if !$darkTheme}
                   sun_min

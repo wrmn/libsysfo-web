@@ -6,8 +6,8 @@
 </script>
 
 <MainCard
-  mainImage={data.images.main
-    ? data.images.main
+  mainImage={data.imagesMain
+    ? data.imagesMain
     : "https://dummyimage.com/600x400/ababab/0011ff"}
 >
   <span slot="name"> {data.name}</span>

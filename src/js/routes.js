@@ -16,7 +16,13 @@ import ProfileIndexPage from "../pages/profile/index.svelte";
 import ProfileSettingsPage from "../pages/profile/settings.svelte";
 
 import BookIndexPage from "../pages/book/index.svelte";
+import BookListPage from "../pages/book/list.svelte";
+import BookBorrowPage from "../pages/book/borrow.svelte";
+
 import PaperIndexPage from "../pages/paper/index.svelte";
+import PaperListPage from "../pages/paper/list.svelte";
+
+
 import DynamicRoutePage from "../pages/dynamic-route.svelte";
 
 import NotFoundPage from "../pages/404.svelte";
@@ -51,10 +57,30 @@ var routes = [
   {
     path: "/book/",
     component: BookIndexPage,
+    routes: [
+      {
+        path: "list/",
+        component: BookListPage,
+      },
+      {
+        path: "borrow/",
+        component: BookBorrowPage,
+      },
+    ],
   },
   {
     path: "/paper/",
     component: PaperIndexPage,
+    routes: [
+      {
+        path: "list/",
+        component: PaperListPage,
+      },
+      {
+        path: "access/",
+        component: BookBorrowPage,
+      },
+    ],
   },
   {
     path: "/profile/",

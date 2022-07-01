@@ -29,14 +29,23 @@
     dataResult.set([]);
     displayData = [];
     const response = await fetch(
-      `http://localhost:5000/book?page=${page}`
+      `http://localhost:5000/paper?page=${page}`
     ).catch(handleError);
     const msg = await response.json();
-    msg.data.book.forEach((e) => {
+    msg.data.paper.forEach((e) => {
+      let desc = "";
+      const ekey = Object.keys(e.description);
+      const evalue = Object.values(e.description);
+      ekey.forEach((f, i) => {
+        desc = `${desc}${ekey[i]} : ${evalue[i]}<br>`;
+      });
       displayData.push({
-        image: e.image,
+        image:
+          "https://pict.sindonews.net/dyn/620/pena/news/2020/12/05/207/257920/beberapa-cara-mudah-untuk-mengonversi-file-ke-pdf-jxi.jpg",
         name: e.title,
-        information: `Oleh : ${e.author}`,
+        information: `${desc}Subject: ${
+          e.subject
+        }`,
         path: `/library/${e.slug}/`,
       });
     });
@@ -47,6 +56,9 @@
     };
     if (page <= 1) {
       switchPage.prev = null;
+    }
+    if (!msg.data.paginate.nextPage) {
+      switchPage.next = null;
     }
     dataResult.set(displayData);
   };
@@ -66,7 +78,7 @@
 
 <Page>
   <div class="box" bind:this={box} />
-  <StandardHeader title="Book List" />
+  <StandardHeader title="Paper List" />
   <ListPage bind:switchPage />
 </Page>
 

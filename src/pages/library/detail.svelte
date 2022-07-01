@@ -53,13 +53,12 @@
   };
 
   const dataSample = async (id) => {
-    const response = await fetch(
-      `https://young-castle-31877.herokuapp.com/library/${id}`
-    ).catch(handleError);
+    const response = await fetch(`http://localhost:5000/library/${id}`).catch(
+      handleError
+    );
     const msg = await response.json();
-    libraryResult.set(msg);
-    loc.dst = [msg.coordinate.longitude, msg.coordinate.latitude];
-
+    libraryResult.set(msg.data.library);
+    loc.dst = msg.data.library.coordinate;
     mapComponent.setCenter(loc.dst);
     zoom = 15;
   };
@@ -110,7 +109,7 @@
       <Tab id="tab-2">
         <Block strong>
           {#if $libraryResult.id}
-            <Gallery photos={$libraryResult.images.content} />
+            <Gallery photos={$libraryResult.imagesContent} />
           {/if}
         </Block>
       </Tab>

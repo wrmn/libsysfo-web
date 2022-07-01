@@ -1,11 +1,11 @@
 <script>
   import { Col, Row } from "framework7-svelte";
-  import StandardHeader from "../standardHeader.svelte";
+  import IndexHeader from "../indexHeader.svelte";
 
   export let title, heroImg;
 </script>
 
-<StandardHeader {title} />
+<IndexHeader {title} />
 <Row>
   <Col width="100" medium="50">
     <div class="main-image title">

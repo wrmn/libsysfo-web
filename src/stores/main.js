@@ -61,8 +61,8 @@ export const mainMenu = readable([
       {
         name: "Profile",
         link: "/profile/",
-        panelClose: false,
-        view: true,
+        panelClose: true,
+        view: ".view-main",
       },
       {
         name: "Settings",
@@ -103,12 +103,12 @@ export const bookCards = readable([
   {
     header: "Search",
     image: "./static/images/hero-7.svg",
-    path: "/library/list/",
+    path: "/book/list/",
   },
   {
     header: "Borrow",
     image: "./static/images/hero-8.svg",
-    path: "/library/map/",
+    path: "/book/borrow/",
   },
 ]);
 
@@ -116,12 +116,12 @@ export const paperCards = readable([
   {
     header: "Search",
     image: "./static/images/hero-9.svg",
-    path: "/library/list/",
+    path: "/paper/list/",
   },
   {
     header: "Access",
     image: "./static/images/hero-10.svg",
-    path: "/library/map/",
+    path: "/paper/access/",
   },
 ]);
 

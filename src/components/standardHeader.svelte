@@ -1,5 +1,12 @@
 <script>
-  import { Navbar, NavRight, Link, Icon } from "framework7-svelte";
+  import {
+    NavTitle,
+    Navbar,
+    NavRight,
+    NavLeft,
+    Link,
+    Icon,
+  } from "framework7-svelte";
   export let title;
   export let side = false;
 </script>
