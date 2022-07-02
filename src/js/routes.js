@@ -15,13 +15,14 @@ import LibraryDetailPage from "../pages/library/detail.svelte";
 import ProfileIndexPage from "../pages/profile/index.svelte";
 import ProfileSettingsPage from "../pages/profile/settings.svelte";
 
+// NOTE: Book
 import BookIndexPage from "../pages/book/index.svelte";
 import BookListPage from "../pages/book/list.svelte";
+import BookDetailPage from "../pages/book/detail.svelte";
 import BookBorrowPage from "../pages/book/borrow.svelte";
 
 import PaperIndexPage from "../pages/paper/index.svelte";
 import PaperListPage from "../pages/paper/list.svelte";
-
 
 import DynamicRoutePage from "../pages/dynamic-route.svelte";
 
@@ -65,6 +66,10 @@ var routes = [
       {
         path: "borrow/",
         component: BookBorrowPage,
+      },
+      {
+        path: "detail/:slug/",
+        component: BookDetailPage,
       },
     ],
   },

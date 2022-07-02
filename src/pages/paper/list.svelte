@@ -29,7 +29,7 @@
     dataResult.set([]);
     displayData = [];
     const response = await fetch(
-      `http://localhost:5000/paper?page=${page}`
+      `${import.meta.env.VITE_SERVER_ADDRESS}/paper?page=${page}`
     ).catch(handleError);
     const msg = await response.json();
     msg.data.paper.forEach((e) => {

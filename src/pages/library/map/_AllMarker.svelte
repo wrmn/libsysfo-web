@@ -7,6 +7,7 @@
     Icon,
     Row,
     Col,
+    f7,
     ListItem,
     Searchbar,
     Card,
@@ -38,6 +39,7 @@
   let isCardHide = true;
   let isMarkerHide = true;
   let isGuideHide = true;
+  let location;
   let srcPoint;
 
   // NOTE: Location
@@ -52,13 +54,17 @@
   });
 
   const locationSuccess = (position) => {
+    location = true;
     src = [position.coords.longitude, position.coords.latitude];
     srcPoint = new mapbox.Marker().setLngLat(src).addTo(map);
   };
 
   const locationError = (error) => {
-    const message = error.message;
-    alert(message);
+    location = false;
+    f7.dialog.alert(
+      "Harap izinkan Libsysfo mengakses lokasi anda untuk perutean",
+      "Izin Lokasi ditolak"
+    );
   };
 
   const handleError = (err) => {
@@ -67,7 +73,7 @@
 
   // NOTE: Marker
   const markerData = async () => {
-    const response = await fetch("http://localhost:5000/library").catch(
+    const response = await fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/library`).catch(
       handleError
     );
     const msg = await response.json();
@@ -211,11 +217,6 @@
     });
   };
 
-  // NOTE: Utility
-  const toggleVisibility = () => {
-    isHide = !isHide;
-  };
-
   const measureZoom = (distance) => {
     let init = 0.149;
     let multipler = 0.149;
@@ -250,7 +251,14 @@
     searchIn=".item-title"
     placeholder=""
     inline
-    on:focus={toggleVisibility}
+    on:focus={() => {
+      isHide = false;
+    }}
+    on:blur={() => {
+      setTimeout(function () {
+        isHide = true;
+      }, 200);
+    }}
   />
 </div>
 
@@ -289,13 +297,19 @@
     >
     <CardFooter>
       <List accordionList>
-        <ListItem accordionItem title="Direction">
+        <ListItem accordionItem title="Direction" disabled={!location}>
           <AccordionContent>
-            <Button fill raised on:click={() => directions("walking")}
-              >walking</Button
+            <Button
+              fill
+              raised
+              on:click={() => directions("walking")}
+              disabled={!location}>walking</Button
             >
-            <Button fill raised on:click={() => directions("driving")}
-              >driving</Button
+            <Button
+              fill
+              raised
+              on:click={() => directions("driving")}
+              disabled={!location}>driving</Button
             >
           </AccordionContent>
         </ListItem>
@@ -340,7 +354,9 @@
   <List accordionList>
     <ListItem accordionItem title="Action">
       <AccordionContent>
-        <Button fill raised on:click={() => gotoLoc(src)}>My Location</Button>
+        <Button fill raised disabled={!location} on:click={() => gotoLoc(src)}
+          >My Location</Button
+        >
         <Button fill raised on:click={() => toggleMarker()}>
           Toggle Marker
         </Button>

@@ -21,17 +21,18 @@
         </div>
       </Col>
     </Row>
-
-    <div class="button-container">
-      <slot name="action" />
-    </div>
   </div>
 </Card>
+
+<div class="button-container">
+  <slot name="action" />
+</div>
 
 <style>
   .card-local {
     width: 75%;
-    min-height: 450px;
+    min-height: 350px;
+    min-width: 300px;
   }
 
   .card-local h1 {
@@ -41,23 +42,18 @@
     text-align: center;
   }
 
-  .card-local .button-container {
-    width: 80%;
-    padding-left: 15%;
-  }
-
   .card-local .info-container {
-    width: 100%;
+    width: 90%;
     padding-left: 0;
-    padding-bottom: 10vh;
+    margin-left: 5%;
   }
 
   img {
     width: 90%;
     max-width: 500px;
     padding: 5%;
-    height: 300px;
-    object-fit: cover;
+    max-height: 300px;
+    object-fit: contain;
     object-position: center;
   }
 </style>

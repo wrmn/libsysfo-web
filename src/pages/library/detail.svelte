@@ -6,6 +6,7 @@
     Link,
     Block,
     Tabs,
+    f7,
     Tab,
     Row,
   } from "framework7-svelte";
@@ -22,6 +23,7 @@
   export let f7route;
 
   const mapboxToken = import.meta.env.VITE_MAPBOX_KEY;
+  let location;
   let mapComponent;
   let zoom = 11.5;
   let loc = {
@@ -40,12 +42,17 @@
   });
 
   function locationSuccess(position) {
+    location = true;
     loc.src = [position.coords.longitude, position.coords.latitude];
   }
 
   function locationError(error) {
+    location = false;
     const message = error.message;
-    alert(message);
+    f7.dialog.alert(
+      "Harap izinkan Libsysfo mengakses lokasi anda untuk perutean",
+      "Izin Lokasi ditolak"
+    );
   }
 
   var handleError = function (err) {
@@ -53,7 +60,8 @@
   };
 
   const dataSample = async (id) => {
-    const response = await fetch(`http://localhost:5000/library/${id}`).catch(
+    libraryResult.set([]);
+    const response = await fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/library/${id}`).catch(
       handleError
     );
     const msg = await response.json();
@@ -128,6 +136,7 @@
               dirWalking={getDirection("walking")}
               dirDriving={getDirection("driving")}
               coords={loc}
+              bind:location
             />
           </Map>
         </div>

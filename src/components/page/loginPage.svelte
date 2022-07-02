@@ -26,13 +26,16 @@
       password: pwd,
     };
     console.log(JSON.stringify(data));
-    const request = new Request("http://localhost:5000/profile/login", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_SERVER_ADDRESS}/profile/login`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const response = await fetch(request).catch(handleError);
     const msg = await response.json();
     if (msg.status != 200) {
@@ -49,7 +52,7 @@
   };
 
   const login = async (data) => {
-    const request = new Request("http://localhost:5000/profile/login/google", {
+    const request = new Request(`${import.meta.env.VITE_SERVER_ADDRESS}/profile/login/google`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -105,7 +108,7 @@
       <Col width="5">
         <Button
           class="link login-screen-close close-button button"
-          iconF7="xmark_circle_fill"
+          iconF7="xmark"
           iconSize="35px"
         />
       </Col>

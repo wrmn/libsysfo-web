@@ -1,13 +1,5 @@
 <script>
-  import {
-    Page,
-    List,
-    ListInput,
-    Row,
-    Preloader,
-    Icon,
-    Col,
-  } from "framework7-svelte";
+  import { Page, Row, Preloader, Icon, Col } from "framework7-svelte";
   import { onDestroy, onMount } from "svelte";
   import ContentCard from "../../components/card/contentCard.svelte";
   import StandardHeader from "../../components/standardHeader.svelte";
@@ -15,6 +7,7 @@
   import * as turf from "@turf/turf";
 
   let displayData = [];
+  let location;
 
   onMount(() => {
     dataResult.set([]);
@@ -33,13 +26,12 @@
   };
 
   const getData = async () => {
-    const response = await fetch("http://localhost:5000/library").catch(
-      handleError
-    );
+    const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ADDRESS}/library`
+    ).catch(handleError);
     const msg = await response.json();
     msg.data.library.forEach((e) => {
       displayData.push({
-        header: "lihat perpustakaan",
         address: e.address,
         image: e.imagesMain,
         coordinate: e.coordinate,
@@ -52,12 +44,12 @@
   };
 
   function locationSuccess(position) {
+    location = true;
     geoData.set([position.coords.longitude, position.coords.latitude]);
   }
 
   function locationError(error) {
-    const message = error.message;
-    alert(message);
+    location = false;
   }
 
   const measureDistance = (from, to) => {
@@ -83,7 +75,7 @@
             <span slot="content">
               {sample.address}
               <br />
-              {#if $geoData}
+              {#if $geoData && sample.coordinate}
                 <Icon f7="map_pin_ellipse" slot="media" size="15px" />
                 {measureDistance($geoData, sample.coordinate).toFixed(2)} Km
               {/if}

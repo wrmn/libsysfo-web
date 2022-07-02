@@ -4,19 +4,19 @@ export const darkTheme = writable(false);
 
 export const mainCards = readable([
   {
-    header: "cari perpustakaan",
+    header: "library",
     content: "temukan perpustakaan yang ada di sekitarmu",
     image: "./static/images/hero-1.svg",
     path: "/library/",
   },
   {
-    header: "cari Buku",
+    header: "Book",
     content: "cari dan pinjam buku yang ingin dipelajari",
     image: "./static/images/hero-3.svg",
     path: "/book/",
   },
   {
-    header: "cari Paper/Jurnal",
+    header: "Paper/Journal",
     content: "akses penelitian yang ditulis dalam jurnal",
     image: "./static/images/hero-4.svg",
     path: "/paper/",

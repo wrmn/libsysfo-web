@@ -35,7 +35,7 @@
       <Col width="5">
         <Button
           class="link login-screen-close close-button button"
-          iconF7="xmark_circle_fill"
+          iconF7="xmark"
           iconSize="35px"
         />
       </Col>

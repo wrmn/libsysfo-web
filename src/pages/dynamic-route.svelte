@@ -1,13 +1,13 @@
 <script>
   import { Page, Navbar, Block, Link } from "framework7-svelte";
-import { onMount } from "svelte";
+  import { onMount } from "svelte";
 
   export let f7route;
   export let f7router;
 
-  onMount(()=>{
-      console.log(f7route.params['blogId'])
-  })
+  onMount(() => {
+    console.log(f7route.params["blogId"]);
+  });
 </script>
 
 <Page>

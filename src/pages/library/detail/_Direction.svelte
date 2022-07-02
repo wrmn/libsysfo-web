@@ -21,6 +21,7 @@
     src: [0, 0],
     dst: [0, 0],
   };
+  export let location = true;
 
   let isGuideHide = true;
 
@@ -135,17 +136,17 @@
   <List accordionList>
     <ListItem accordionItem title="Location">
       <AccordionContent>
-        <Button fill raised on:click={() => currentLocation()}>My</Button>
+        <Button fill raised disabled={!location} on:click={() => currentLocation()}>My</Button>
         <Button fill raised on:click={() => libraryLocation()}>Library</Button>
       </AccordionContent>
     </ListItem>
 
-    <ListItem accordionItem title="Direction">
+    <ListItem accordionItem title="Direction" disabled={!location}>
       <AccordionContent>
-        <Button fill raised on:click={() => directions("walking")}
+        <Button fill raised on:click={() => directions("walking")} disabled={!location}
           >walking</Button
         >
-        <Button fill raised on:click={() => directions("driving")}
+        <Button fill raised on:click={() => directions("driving")} disabled={!location}
           >driving</Button
         >
       </AccordionContent>

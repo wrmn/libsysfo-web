@@ -29,7 +29,7 @@
     dataResult.set([]);
     displayData = [];
     const response = await fetch(
-      `http://localhost:5000/book?page=${page}`
+      `${import.meta.env.VITE_SERVER_ADDRESS}/book?page=${page}`
     ).catch(handleError);
     const msg = await response.json();
     msg.data.book.forEach((e) => {
@@ -37,7 +37,7 @@
         image: e.image,
         name: e.title,
         information: `Oleh : ${e.author}`,
-        path: `/library/${e.slug}/`,
+        path: `/book/detail/${e.slug}/`,
       });
     });
 
@@ -64,6 +64,7 @@
   };
 </script>
 
+<!-- TODO: Add searchbar-->
 <Page>
   <div class="box" bind:this={box} />
   <StandardHeader title="Book List" />

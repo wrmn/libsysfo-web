@@ -1,5 +1,5 @@
 <script>
-  import { List, ListItem, Icon } from "framework7-svelte";
+  import { List, ListItem} from "framework7-svelte";
   import { guideResult } from "../../../stores/data";
 
   const distanceMeasure = (distance) =>
