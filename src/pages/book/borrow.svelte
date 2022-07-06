@@ -1,7 +1,6 @@
 <script>
     import { Button } from "framework7-svelte";
     import LoginRequired from "../../components/loginRequired.svelte";
-    import { loginStats } from "../../stores/data";
     import { logout } from "../../js/util";
   </script>
   
@@ -12,7 +11,6 @@
         fill
         on:click={() => {
           logout();
-          loginStats.set(false);
         }}>Logout</Button
       >
     </span>

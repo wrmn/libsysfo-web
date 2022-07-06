@@ -47,6 +47,10 @@
   text-transform: capitalize;
 }
 
+.make-capital-cancel {
+  text-transform: none;
+}
+
 .make-center {
   margin: auto;
 }

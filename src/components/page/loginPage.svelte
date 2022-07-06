@@ -12,7 +12,7 @@
   } from "framework7-svelte";
   import { getDevice } from "framework7";
   import Register from "./registerPage.svelte";
-  import { loginStats } from "../../stores/data";
+  import { loginStats, userResult } from "../../stores/data";
 
   export let loginScreenOpened = false;
   export let registerScreenOpened = false;
@@ -25,7 +25,6 @@
       indicator: idValue,
       password: pwd,
     };
-    console.log(JSON.stringify(data));
     const request = new Request(
       `${import.meta.env.VITE_SERVER_ADDRESS}/profile/login`,
       {
@@ -44,6 +43,7 @@
       localStorage.setItem("account-credential", msg.data.token);
       loginStats.set(true);
       f7.loginScreen.close();
+      getData();
     }
   };
 
@@ -51,14 +51,37 @@
     console.warn(err);
   };
 
+  const getData = async () => {
+    userResult.set([]);
+    const myHeaders = new Headers();
+
+    myHeaders.append(
+      "Authorization",
+      `Bearer ${localStorage.getItem("account-credential")}`
+    );
+    const request = new Request(
+      `${import.meta.env.VITE_SERVER_ADDRESS}/profile`,
+      {
+        method: "GET",
+        headers: myHeaders,
+      }
+    );
+    const response = await fetch(request).catch(handleError);
+    const msg = await response.json();
+    userResult.set(msg.data.profile);
+  };
+
   const login = async (data) => {
-    const request = new Request(`${import.meta.env.VITE_SERVER_ADDRESS}/profile/login/google`, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_SERVER_ADDRESS}/profile/login/google`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const response = await fetch(request).catch(handleError);
     const msg = await response.json();
@@ -68,6 +91,7 @@
       localStorage.setItem("account-credential", msg.data.token);
       loginStats.set(true);
       f7.loginScreen.close();
+      getData();
     }
   };
 

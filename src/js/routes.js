@@ -13,6 +13,7 @@ import LibraryDetailPage from "../pages/library/detail.svelte";
 
 // NOTE: Profile
 import ProfileIndexPage from "../pages/profile/index.svelte";
+import SettingsPage from "../pages/settings.svelte";
 import ProfileSettingsPage from "../pages/profile/settings.svelte";
 
 // NOTE: Book
@@ -20,9 +21,11 @@ import BookIndexPage from "../pages/book/index.svelte";
 import BookListPage from "../pages/book/list.svelte";
 import BookDetailPage from "../pages/book/detail.svelte";
 import BookBorrowPage from "../pages/book/borrow.svelte";
-
+// NOTE: Paper
 import PaperIndexPage from "../pages/paper/index.svelte";
 import PaperListPage from "../pages/paper/list.svelte";
+import PaperAccessPage from "../pages/paper/access.svelte";
+import PaperDetailPage from "../pages/paper/detail.svelte";
 
 import DynamicRoutePage from "../pages/dynamic-route.svelte";
 
@@ -83,7 +86,11 @@ var routes = [
       },
       {
         path: "access/",
-        component: BookBorrowPage,
+        component: PaperAccessPage,
+      },
+      {
+        path: "detail/:paperId/",
+        component: PaperDetailPage,
       },
     ],
   },
@@ -96,6 +103,10 @@ var routes = [
         component: ProfileSettingsPage,
       },
     ],
+  },
+  {
+    path: "/settings/",
+    component: SettingsPage,
   },
   {
     path: "/help/",

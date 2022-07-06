@@ -47,12 +47,13 @@
     </List>
     <List class="search-list searchbar-found">
       <List mediaList>
-        {#each $libraryResult.paperCollection as paper}
+        {#each $libraryResult.paper as paper}
           <ListItem
-            link={paper.id}
+            link={`/paper/detail/${paper.id}/`}
             title={paper.title}
             text={paper.abstract}
             header={infoGenerator(paper)}
+            popupClose
             tooltip={infoGenerator(paper)}
           >
             <Badge

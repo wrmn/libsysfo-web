@@ -13,7 +13,6 @@
     ListItem,
   } from "framework7-svelte";
   import { libraryResult } from "../../../stores/data";
-  console.log($libraryResult);
 
   let component;
   export let bookPopup = false;
@@ -40,12 +39,12 @@
     </List>
     <List class="search-list searchbar-found">
       <List mediaList>
-        {#each $libraryResult.bookCollection as book}
+        {#each $libraryResult.book as book}
           <ListItem
             title={book.title}
             link={`/book/detail/${book.slug}/?library=${$libraryResult.id}`}
             popupClose
-            subtitle="Beatles"
+            subtitle={book.category}
             text={book.description}
           >
             <Badge color={book.status.availability ? "green" : "red"} />

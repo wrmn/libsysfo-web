@@ -14,6 +14,24 @@
 </script>
 
 <Block strong>
+  <Segmented round tag="p">
+    <Button
+      round
+      outline
+      disabled={!switchPage.prev}
+      onClick={() => {
+        switchPage.prev();
+      }}>Previous</Button
+    >
+    <Button
+      round
+      outline
+      disabled={!switchPage.next}
+      onClick={() => {
+        switchPage.next();
+      }}>Next</Button
+    >
+  </Segmented>
   <Row class="search-list searchbar-found">
     {#if typeof $dataResult == "object"}
       {#if $dataResult.length == 0}

@@ -1,20 +1,185 @@
 <script>
-  import { Button, f7 } from "framework7-svelte";
+  import {
+    Card,
+    CardContent,
+    Row,
+    Badge,
+    Icon,
+    Col,
+    Toolbar,
+    Link,
+    Tabs,
+    Tab,
+  } from "framework7-svelte";
+  import { onDestroy, onMount } from "svelte";
+  import { userResult } from "../../stores/data";
+  import { isoToDmy } from "../../js/util";
+
   import LoginRequired from "../../components/loginRequired.svelte";
-  import { loginStats } from "../../stores/data";
-  import { logout } from "../../js/util";
+
+  onMount(() => {
+    getData();
+  });
+
+  onDestroy(() => {
+    userResult.set([]);
+  });
+
+  const getData = async () => {
+    userResult.set([]);
+    if (!localStorage.getItem("account-credential")) {
+      return;
+    }
+    const myHeaders = new Headers();
+
+    myHeaders.append(
+      "Authorization",
+      `Bearer ${localStorage.getItem("account-credential")}`
+    );
+    const request = new Request(
+      `${import.meta.env.VITE_SERVER_ADDRESS}/profile`,
+      {
+        method: "GET",
+        headers: myHeaders,
+      }
+    );
+    const response = await fetch(request).catch(handleError);
+    const msg = await response.json();
+    userResult.set(msg.data.profile);
+    console.log($userResult);
+  };
+
+  var handleError = function (err) {
+    console.warn(err);
+  };
 </script>
 
-<LoginRequired title="settings">
+<LoginRequired title="Profile">
   <span slot="content">
-    logged in
-    <Button
-      fill
-      on:click={() => {
-        logout();
-        f7.dialog.alert("Logged Out", "Info");
-        loginStats.set(false);
-      }}>Logout</Button
-    >
+    <div class="page-centered">
+      <Card>
+        <CardContent padding={false}>
+          <div class="content-centered">
+            <Row>
+              <Col width="100" medium="25">
+                <img src={$userResult.images} alt="" width="100" height="100" />
+              </Col>
+              <Col width="100" medium="75">
+                <div class="content-title">{$userResult.name}</div>
+                <div class="content-subtitle">
+                  {$userResult.email}
+                  {#if $userResult.verivied}
+                    <Badge tooltip="Email verivied" color="blue">
+                      <Icon f7="checkmark_shield" />
+                    </Badge>
+                  {/if}
+                </div>
+              </Col>
+            </Row>
+          </div>
+
+          <Toolbar tabbar bottom>
+            <Link tabLink="#tab-1" tabLinkActive>Information</Link>
+            <Link tabLink="#tab-2">Borrow</Link>
+            <Link tabLink="#tab-3">Access</Link>
+          </Toolbar>
+          <Tabs>
+            <Tab id="tab-1" tabActive>
+              <Card class="demo-card-header-pic">
+                <CardContent>
+                  <table width="100%" class="make-capital">
+                    <tbody>
+                      <tr>
+                        <td class="label-cell">Userame </td>
+                        <td class="label-cell" style="text-transform: none;">
+                          : {$userResult.username}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="label-cell">Name </td>
+                        <td class="label-cell">: {$userResult.name}</td>
+                      </tr>
+                      <tr>
+                        <td class="label-cell">Gender </td>
+                        <td class="label-cell">
+                          : {$userResult.gender == "M"
+                            ? "Male"
+                            : $userResult.gender == "F"
+                            ? "Female"
+                            : "-"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="label-cell">Place/Date of birth </td>
+                        <td class="label-cell">
+                          : {$userResult.placeOfBirth} / {$userResult.dateOfBirth
+                            ? isoToDmy($userResult.dateOfBirth, "dd mmmm yyyy")
+                            : "-"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="label-cell">Profession / Institution </td>
+                        <td class="label-cell">
+                          : {$userResult.profession}/{$userResult.institution}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="label-cell">Address </td>
+                        <td class="label-cell">
+                          : {$userResult.address}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td class="label-cell">Phone number </td>
+                        <td class="label-cell">
+                          :{#if $userResult.isWhatsapp}
+                            <Badge tooltip="Whatsapp Number" color="green"
+                              ><Icon f7="phone_circle" /></Badge
+                            >
+                          {/if}
+                          {$userResult.phoneNo}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </CardContent>
+              </Card>
+            </Tab>
+            <Tab id="tab-2">
+              <Card class="demo-card-header-pic">
+                <CardContent>Hollad</CardContent>
+              </Card>
+            </Tab>
+            <Tab id="tab-3">
+              <Card class="demo-card-header-pic">
+                <CardContent>Hollak</CardContent>
+              </Card>
+            </Tab>
+          </Tabs>
+        </CardContent>
+      </Card>
+    </div>
   </span>
 </LoginRequired>
+
+<style>
+  .page-centered {
+    margin: 5% 10%;
+  }
+
+  .content-centered {
+    padding: 50px;
+  }
+
+  .content-title {
+    font-size: 2.2em;
+    font-weight: bolder;
+  }
+
+  .content-subtitle {
+    font-size: 1.3em;
+    font-weight: bolder;
+    opacity: 0.7;
+  }
+</style>

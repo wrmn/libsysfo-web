@@ -10,8 +10,10 @@
   export let title;
 
   onMount(() => {
-    loginStats.set(checkLogin());
-    loginScreenOpened = !$loginStats;
+    setTimeout(function () {
+      loginStats.set(checkLogin());
+      loginScreenOpened = !$loginStats;
+    }, 50);
   });
 </script>
 
@@ -26,6 +28,7 @@
       fill
       on:click={() => {
         loginScreenOpened = !loginScreenOpened;
+        console.log(loginScreenOpened);
       }}>Login</Button
     >
   {/if}

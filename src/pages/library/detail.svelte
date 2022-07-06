@@ -48,7 +48,6 @@
 
   function locationError(error) {
     location = false;
-    const message = error.message;
     f7.dialog.alert(
       "Harap izinkan Libsysfo mengakses lokasi anda untuk perutean",
       "Izin Lokasi ditolak"
@@ -61,11 +60,15 @@
 
   const dataSample = async (id) => {
     libraryResult.set([]);
-    const response = await fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/library/${id}`).catch(
-      handleError
-    );
+    const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ADDRESS}/library/${id}`
+    ).catch(handleError);
     const msg = await response.json();
-    libraryResult.set(msg.data.library);
+    const dataBody = msg.data.library;
+    dataBody.book = msg.data.book;
+    dataBody.paper = msg.data.paper;
+
+    libraryResult.set(dataBody);
     loc.dst = msg.data.library.coordinate;
     mapComponent.setCenter(loc.dst);
     zoom = 15;
