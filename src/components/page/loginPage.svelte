@@ -12,7 +12,12 @@
   } from "framework7-svelte";
   import { getDevice } from "framework7";
   import Register from "./registerPage.svelte";
-  import { loginStats, userResult } from "../../stores/data";
+  import {
+    loginStats,
+    userResult,
+    permissionResult,
+    borrowResult,
+  } from "../../stores/data";
 
   export let loginScreenOpened = false;
   export let registerScreenOpened = false;
@@ -53,6 +58,8 @@
 
   const getData = async () => {
     userResult.set([]);
+    permissionResult.set([]);
+    borrowResult.set([]);
     const myHeaders = new Headers();
 
     myHeaders.append(
@@ -69,6 +76,12 @@
     const response = await fetch(request).catch(handleError);
     const msg = await response.json();
     userResult.set(msg.data.profile);
+    if (msg.data.permission) {
+      permissionResult.set(msg.data.permission);
+    }
+    if (msg.data.borrow) {
+      borrowResult.set(msg.data.borrow);
+    }
   };
 
   const login = async (data) => {

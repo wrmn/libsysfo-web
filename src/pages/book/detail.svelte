@@ -50,6 +50,10 @@
     const response = await fetch(
       `${import.meta.env.VITE_SERVER_ADDRESS}/book/${slug}`
     ).catch(handleError);
+    if (response.statsu != 200) {
+      handleError("service unavailable");
+      return;
+    }
     const msg = await response.json();
     bookResult.set(msg.data);
   };
@@ -150,7 +154,7 @@
           <Tab id="tab-2">
             <Card class="demo-card-header-pic">
               <CardContent>
-                {#if $bookResult.collection}
+                {#if $bookResult.collection.length != 0}
                   <table width="100%" class="text-align-center">
                     <thead>
                       <tr>

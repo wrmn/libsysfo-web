@@ -28,8 +28,9 @@
       fill
       on:click={() => {
         loginScreenOpened = !loginScreenOpened;
-        console.log(loginScreenOpened);
-      }}>Login</Button
+      }}
     >
+      Login
+    </Button>
   {/if}
 </Page>

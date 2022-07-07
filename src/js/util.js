@@ -1,5 +1,10 @@
 import { f7 } from "framework7-svelte";
-import { loginStats, userResult } from "../stores/data";
+import {
+  loginStats,
+  userResult,
+  borrowResult,
+  permissionResult,
+} from "../stores/data";
 import dateFormat from "dateformat";
 
 export const checkLogin = () => {
@@ -11,6 +16,8 @@ export const logout = () => {
   f7.dialog.confirm("Logout user?", "", function () {
     localStorage.removeItem("account-credential");
     userResult.set([]);
+    permissionResult.set([]);
+    borrowResult.set([]);
     loginStats.set(checkLogin());
     f7.dialog.alert("Logged Out", "Info");
   });

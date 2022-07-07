@@ -12,9 +12,15 @@
     Tab,
   } from "framework7-svelte";
   import { onDestroy, onMount } from "svelte";
-  import { userResult } from "../../stores/data";
+  import {
+    permissionResult,
+    userResult,
+    borrowResult,
+  } from "../../stores/data";
   import { isoToDmy } from "../../js/util";
 
+  import AccessPage from "../../components/page/accessPage.svelte";
+  import BorrowPage from "../../components/page/borrowPage.svelte";
   import LoginRequired from "../../components/loginRequired.svelte";
 
   onMount(() => {
@@ -23,6 +29,8 @@
 
   onDestroy(() => {
     userResult.set([]);
+    permissionResult.set([]);
+    borrowResult.set([]);
   });
 
   const getData = async () => {
@@ -46,7 +54,12 @@
     const response = await fetch(request).catch(handleError);
     const msg = await response.json();
     userResult.set(msg.data.profile);
-    console.log($userResult);
+    if (msg.data.permission) {
+      permissionResult.set(msg.data.permission);
+    }
+    if (msg.data.borrow) {
+      borrowResult.set(msg.data.borrow);
+    }
   };
 
   var handleError = function (err) {
@@ -65,7 +78,9 @@
                 <img src={$userResult.images} alt="" width="100" height="100" />
               </Col>
               <Col width="100" medium="75">
-                <div class="content-title">{$userResult.name}</div>
+                <div class=" make-capital content-title">
+                  {$userResult.name}
+                </div>
                 <div class="content-subtitle">
                   {$userResult.email}
                   {#if $userResult.verivied}
@@ -87,74 +102,84 @@
             <Tab id="tab-1" tabActive>
               <Card class="demo-card-header-pic">
                 <CardContent>
-                  <table width="100%" class="make-capital">
-                    <tbody>
-                      <tr>
-                        <td class="label-cell">Userame </td>
-                        <td class="label-cell" style="text-transform: none;">
-                          : {$userResult.username}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="label-cell">Name </td>
-                        <td class="label-cell">: {$userResult.name}</td>
-                      </tr>
-                      <tr>
-                        <td class="label-cell">Gender </td>
-                        <td class="label-cell">
-                          : {$userResult.gender == "M"
-                            ? "Male"
-                            : $userResult.gender == "F"
-                            ? "Female"
-                            : "-"}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="label-cell">Place/Date of birth </td>
-                        <td class="label-cell">
-                          : {$userResult.placeOfBirth} / {$userResult.dateOfBirth
-                            ? isoToDmy($userResult.dateOfBirth, "dd mmmm yyyy")
-                            : "-"}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="label-cell">Profession / Institution </td>
-                        <td class="label-cell">
-                          : {$userResult.profession}/{$userResult.institution}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="label-cell">Address </td>
-                        <td class="label-cell">
-                          : {$userResult.address}
-                        </td>
-                      </tr>
+                  {#if $userResult.dateOfBirth}
+                    <table width="100%" class="make-capital">
+                      <tbody>
+                        <tr>
+                          <td class="label-cell">Userame </td>
+                          <td class="label-cell">:</td>
+                          <td class="label-cell" style="text-transform: none;">
+                            {$userResult.username}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label-cell">Name </td>
+                          <td class="label-cell">:</td>
+                          <td class="label-cell"> {$userResult.name}</td>
+                        </tr>
+                        <tr>
+                          <td class="label-cell">Gender </td>
+                          <td class="label-cell">:</td>
+                          <td class="label-cell">
+                            {$userResult.gender == "M"
+                              ? "Male"
+                              : $userResult.gender == "F"
+                              ? "Female"
+                              : "-"}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label-cell">Place/Date of birth </td>
+                          <td class="label-cell">:</td>
+                          <td class="label-cell">
+                            {$userResult.placeOfBirth} / {$userResult.dateOfBirth
+                              ? isoToDmy(
+                                  $userResult.dateOfBirth,
+                                  "dd mmmm yyyy"
+                                )
+                              : "-"}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label-cell">Profession / Institution </td>
+                          <td class="label-cell">:</td>
+                          <td class="label-cell">
+                            {$userResult.profession}/{$userResult.institution}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="label-cell">Address </td>
+                          <td class="label-cell">:</td>
+                          <td class="label-cell">
+                            {$userResult.address}
+                          </td>
+                        </tr>
 
-                      <tr>
-                        <td class="label-cell">Phone number </td>
-                        <td class="label-cell">
-                          :{#if $userResult.isWhatsapp}
-                            <Badge tooltip="Whatsapp Number" color="green"
-                              ><Icon f7="phone_circle" /></Badge
-                            >
-                          {/if}
-                          {$userResult.phoneNo}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                        <tr>
+                          <td class="label-cell">Phone number </td>
+                          <td class="label-cell">:</td>
+                          <td class="label-cell">
+                            {#if $userResult.isWhatsapp}
+                              <Badge tooltip="Whatsapp Number" color="green"
+                                ><Icon f7="phone_circle" /></Badge
+                              >
+                            {/if}
+                            {$userResult.phoneNo}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  {:else}
+                    Lengkapi profil anda
+                  {/if}
                 </CardContent>
               </Card>
             </Tab>
             <Tab id="tab-2">
-              <Card class="demo-card-header-pic">
-                <CardContent>Hollad</CardContent>
-              </Card>
+              <BorrowPage />
             </Tab>
             <Tab id="tab-3">
-              <Card class="demo-card-header-pic">
-                <CardContent>Hollak</CardContent>
-              </Card>
+              <AccessPage />
             </Tab>
           </Tabs>
         </CardContent>
