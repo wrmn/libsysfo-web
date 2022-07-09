@@ -28,7 +28,7 @@
 
 <Card>
   <CardContent>
-    <div class="data-table">
+    <div class="data-table make-capital">
       {#if $borrowResult.length == 0}
         Belum mengajukan peminjaman
       {:else}

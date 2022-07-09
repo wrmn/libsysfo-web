@@ -164,7 +164,7 @@
                                 ><Icon f7="phone_circle" /></Badge
                               >
                             {/if}
-                            {$userResult.phoneNo}
+                            {`(${$userResult.phoneCode})${$userResult.phoneNo}`}
                           </td>
                         </tr>
                       </tbody>

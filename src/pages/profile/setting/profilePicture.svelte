@@ -1,6 +1,6 @@
 <script>
   import { List, Button, f7 } from "framework7-svelte";
-  import { userResult } from "../../../stores/data";
+  import { userResult, loginStats } from "../../../stores/data";
   let input;
   let container;
   let image;
@@ -52,17 +52,12 @@
         body: JSON.stringify(reqBody),
       }
     );
-    console.log(JSON.stringify(reqBody));
     const response = await fetch(request).catch(handleError);
     const msg = await response.json();
     if (msg.status != 200) {
       f7.dialog.alert(msg.description, "Failed");
     } else {
       f7.dialog.alert(msg.description, "");
-      localStorage.setItem("account-credential", msg.data.token);
-      loginStats.set(true);
-      f7.loginScreen.close();
-      getData();
     }
   };
 

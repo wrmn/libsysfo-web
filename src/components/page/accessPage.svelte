@@ -27,7 +27,7 @@
 
 <Card>
   <CardContent>
-    <div class="data-table">
+    <div class="data-table make-capital">
       {#if $permissionResult.length == 0}
         Belum mengajukan akses untuk jurnal
       {:else}

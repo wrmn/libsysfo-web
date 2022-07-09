@@ -2,6 +2,7 @@
   import Login from "./page/loginPage.svelte";
   import { Button, Page } from "framework7-svelte";
   import StandardHeader from "./standardHeader.svelte";
+  import IndexHeader from "./indexHeader.svelte";
   import { checkLogin } from "../js/util";
   import { onMount } from "svelte";
   import { loginStats } from "../stores/data";
@@ -18,7 +19,7 @@
 </script>
 
 <Page>
-  <StandardHeader bind:title side />
+  <IndexHeader bind:title />
   <Login bind:loginScreenOpened />
   {#if $loginStats}
     <slot name="content" />
