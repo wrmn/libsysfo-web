@@ -31,9 +31,9 @@
         <Row>
           {#each $developerContact as e}
             <Col width="15">
-              <Button round>
+              <a round class="link external" href={e.link}>
                 <Icon f7={e.name} color={e.color} />
-              </Button>
+              </a>
             </Col>
           {/each}
         </Row>

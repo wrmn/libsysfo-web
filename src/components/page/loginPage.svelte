@@ -53,6 +53,7 @@
   };
 
   const handleError = (err) => {
+    f7.dialog.alert(err, "Server timeout");
     console.warn(err);
   };
 
@@ -85,6 +86,7 @@
   };
 
   const login = async (data) => {
+    f7.dialog.preloader();
     const request = new Request(
       `${import.meta.env.VITE_SERVER_ADDRESS}/profile/login/google`,
       {
@@ -99,8 +101,10 @@
     const response = await fetch(request).catch(handleError);
     const msg = await response.json();
     if (msg.status != 200) {
+      f7.dialog.close();
       f7.dialog.alert(msg.description, "Login Failed");
     } else {
+      f7.dialog.close();
       localStorage.setItem("account-credential", msg.data.token);
       loginStats.set(true);
       f7.loginScreen.close();

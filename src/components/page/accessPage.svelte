@@ -109,7 +109,7 @@
                 </td>
                 <td class="label-cell">
                   {#if p.accepted}
-                    <Button>Read</Button>
+                    <Button href={`/paper/read/${p.id}/`}>Read</Button>
                   {/if}
                 </td>
               </tr>

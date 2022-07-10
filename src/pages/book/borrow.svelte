@@ -1,5 +1,5 @@
 <script>
-  import { Button } from "framework7-svelte";
+  import { Button, f7 } from "framework7-svelte";
   import LoginRequired from "../../components/loginRequired.svelte";
 
   import BorrowPage from "../../components/page/borrowPage.svelte";
@@ -15,6 +15,7 @@
   });
 
   var handleError = function (err) {
+    f7.dialog.alert(err, "Server timeout");
     console.warn(err);
   };
 

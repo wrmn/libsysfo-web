@@ -31,6 +31,7 @@
   }
 
   const chgPicture = async (password) => {
+    f7.dialog.preloader();
     const myHeaders = new Headers();
 
     myHeaders.append(
@@ -55,13 +56,16 @@
     const response = await fetch(request).catch(handleError);
     const msg = await response.json();
     if (msg.status != 200) {
+      f7.dialog.close();
       f7.dialog.alert(msg.description, "Failed");
     } else {
+      f7.dialog.close();
       f7.dialog.alert(msg.description, "");
     }
   };
 
   var handleError = function (err) {
+    f7.dialog.alert(err, "Server timeout");
     console.warn(err);
   };
 </script>

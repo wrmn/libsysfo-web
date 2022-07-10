@@ -1,5 +1,5 @@
 <script>
-  import { Page, Row, Preloader, Icon, Col } from "framework7-svelte";
+  import { Page, Row, Preloader, Icon, Col, f7 } from "framework7-svelte";
   import { onDestroy, onMount } from "svelte";
   import ContentCard from "../../components/card/contentCard.svelte";
   import StandardHeader from "../../components/standardHeader.svelte";
@@ -22,6 +22,7 @@
 
   var handleError = function (err) {
     console.warn(err);
+    f7.dialog.alert(err, "Server timeout");
     dataResult.set(err.message);
   };
 

@@ -7,6 +7,7 @@
     Icon,
     Col,
     Toolbar,
+    f7,
     Link,
     Tabs,
     Tab,
@@ -64,6 +65,7 @@
 
   var handleError = function (err) {
     console.warn(err);
+    f7.dialog.alert(err, "Server timeout");
   };
 </script>
 
@@ -109,7 +111,11 @@
                           <td class="label-cell">Userame </td>
                           <td class="label-cell">:</td>
                           <td class="label-cell" style="text-transform: none;">
-                            {$userResult.username}
+                            {#if $userResult.username}
+                              {$userResult.username}
+                            {:else}
+                            <a href="/profile/settings/"> Set username</a>
+                            {/if}
                           </td>
                         </tr>
                         <tr>

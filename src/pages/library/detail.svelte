@@ -55,6 +55,7 @@
   }
 
   var handleError = function (err) {
+    f7.dialog.alert(err, "Server timeout");
     console.warn(err);
   };
 

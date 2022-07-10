@@ -1,5 +1,5 @@
 <script>
-  import { List, ListItem, AccordionContent } from "framework7-svelte";
+  import { List, ListItem, f7, AccordionContent } from "framework7-svelte";
   import { userResult } from "../../stores/data";
   import { onDestroy, onMount } from "svelte";
 
@@ -12,10 +12,6 @@
 
   let email, username;
 
-  var handleError = function (err) {
-    console.warn(err);
-  };
-
   onMount(() => {
     getData();
   });
@@ -25,6 +21,8 @@
   });
 
   var handleError = function (err) {
+    f7.dialog.close();
+    f7.dialog.alert(err, "Server timeout");
     console.warn(err);
   };
 

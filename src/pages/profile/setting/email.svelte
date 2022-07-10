@@ -38,6 +38,7 @@
   };
 
   const resendMail = async () => {
+    f7.dialog.preloader();
     const myHeaders = new Headers();
 
     myHeaders.append(
@@ -54,14 +55,26 @@
     );
     const response = await fetch(request).catch(handleError);
     if (response.status != 200) {
+      f7.dialog.close();
       f7.dialog.alert("Fail to resend verification email", "");
       return;
     }
     const msg = await response.json();
+    f7.dialog.close();
     f7.dialog.alert(msg.description, "");
   };
 
   const chgEmail = async (password) => {
+    f7.dialog.preloader();
+    if (
+      !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g.test(
+        email
+      )
+    ) {
+      f7.dialog.alert("Invalid email", "");
+      return;
+    }
+
     const myHeaders = new Headers();
 
     myHeaders.append(
@@ -86,8 +99,10 @@
     const response = await fetch(request).catch(handleError);
     const msg = await response.json();
     if (msg.status != 200) {
+      f7.dialog.close();
       f7.dialog.alert(msg.description, "Failed");
     } else {
+      f7.dialog.close();
       f7.dialog.alert(msg.description, "");
       localStorage.setItem("account-credential", msg.data.token);
       loginStats.set(true);
@@ -97,6 +112,7 @@
   };
 
   var handleError = function (err) {
+    f7.dialog.alert(err, "Server timeout");
     console.warn(err);
   };
 </script>

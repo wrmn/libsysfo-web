@@ -189,18 +189,21 @@ export const contactContent = readable({
     {
       label: "Name",
       type: "text",
+      variable: "name",
       placeholder: "Your Name",
       icon: "house",
     },
     {
       label: "E-mail (optional)",
       type: "email",
+      variable: "email",
       placeholder: "Your E-mail",
       icon: "envelope",
     },
     {
       label: "Message",
       type: "textarea",
+      variable: "message",
       placeholder: "YourMessage",
       resizeable: true,
       icon: false,
@@ -208,17 +211,17 @@ export const contactContent = readable({
   ],
   button: [
     {
-      link: "",
+      link: "mailto:moawarman@gmail.com",
       name: "envelope",
       color: "theme",
     },
     {
-      link: "",
+      link: "https://wa.me/6282288411815?text=Hallo%20saya%20ingin%20kirim%20feedback%20aplikasi%20libsysfo",
       name: "phone",
       color: "green",
     },
     {
-      link: "",
+      link: "http://m.me/100007938731159",
       name: "logo_facebook",
       color: "blue",
     },
@@ -227,17 +230,17 @@ export const contactContent = readable({
 
 export const developerContact = readable([
   {
-    link: "",
+    link: "https://github.com/wrmn",
     name: "logo_github",
     color: "theme",
   },
   {
-    link: "",
+    link: "https://www.linkedin.com/in/adityawarman/",
     name: "logo_linkedin",
     color: "lightblue",
   },
   {
-    link: "",
+    link: "https://www.facebook.com/profile.php?id=100007938731159",
     name: "logo_facebook",
     color: "blue",
   },

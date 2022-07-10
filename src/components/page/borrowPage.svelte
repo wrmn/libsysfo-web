@@ -95,6 +95,16 @@
                 />
                 Perpustakaan
               </th>
+              <th class="label-cell">
+                <Button
+                  iconF7="arrow_up_arrow_down"
+                  on:click={() => {
+                    desc = !desc;
+                    sortData("status");
+                  }}
+                />
+                Status
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -104,19 +114,32 @@
                   {@html isoToDmy(p.createdAt, "hh:MM <br> dd mmmm yyyy")}
                 </td>
                 <td class="label-cell">
-                  {@html isoToDmy(p.takedAt, "hh:MM <br> dd mmmm yyyy")}
+                  {@html p.takedAt
+                    ? isoToDmy(p.takedAt, "hh:MM <br> dd mmmm yyyy")
+                    : "Belum diambil"}
                 </td>
                 <td class="label-cell">
-                  {@html isoToDmy(p.returnedAt, "hh:MM <br> dd mmmm yyyy")}
+                  {@html p.returnedAt
+                    ? isoToDmy(p.returnedAt, "hh:MM <br> dd mmmm yyyy")
+                    : p.returnedAt
+                    ? "Belum dikembalikan"
+                    : ""}
                 </td>
                 <td class="label-cell">
-                  {p.title}
+                  <a href={`/book/detail/${p.slug}/`}>
+                    {p.title}
+                  </a>
                 </td>
                 <td class="label-cell">
                   {p.serialNumber}
                 </td>
                 <td class="label-cell">
-                  {p.libraryName}
+                  <a href={`/library/detail/${p.libraryId}/`}>
+                    {p.libraryName}
+                  </a>
+                </td>
+                <td class="label-cell">
+                  {p.status}
                 </td>
               </tr>
             {/each}

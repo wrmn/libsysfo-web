@@ -13,6 +13,7 @@
     Tab,
     Row,
     Preloader,
+    app,
   } from "framework7-svelte";
   import { onMount, onDestroy } from "svelte";
   import MainCard from "../../components/card/mainCard.svelte";
@@ -50,12 +51,45 @@
     const response = await fetch(
       `${import.meta.env.VITE_SERVER_ADDRESS}/book/${slug}`
     ).catch(handleError);
-    if (response.statsu != 200) {
+    if (response.status != 200) {
       handleError("service unavailable");
       return;
     }
     const msg = await response.json();
     bookResult.set(msg.data);
+  };
+
+  const newBorrow = async (collectionId) => {
+    const reqBody = {
+      collectionId,
+    };
+    console.log(JSON.stringify(reqBody));
+
+    const myHeaders = new Headers();
+
+    myHeaders.append(
+      "Authorization",
+      `Bearer ${localStorage.getItem("account-credential")}`
+    );
+
+    const request = new Request(
+      `${import.meta.env.VITE_SERVER_ADDRESS}/profile/borrow/new`,
+      {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify(reqBody),
+      }
+    );
+    const response = await fetch(request).catch(handleError);
+    const msg = await response.json();
+
+    if (response.status != 200) {
+      f7.dialog.alert(msg.description, "Task Failed!");
+      return;
+    }
+    f7.dialog.alert(msg.description, "", () => {
+      f7.views.main.router.navigate("/book/borrow/");
+    });
   };
 </script>
 
@@ -190,7 +224,18 @@
                                 <Badge color="red" tooltip="Kondisi" /> Rusak
                               {/if}
                             </td>
-                            <td class="label-cell">Ajukan Peminjaman</td>
+                            <td class="label-cell">
+                              {#if a.availability}
+                                <Button
+                                  fill
+                                  on:click={() => {
+                                    newBorrow(a.id);
+                                  }}
+                                >
+                                  Ajukan Peminjaman
+                                </Button>
+                              {/if}
+                            </td>
 
                             <td class="label-cell" />
                           </tr>

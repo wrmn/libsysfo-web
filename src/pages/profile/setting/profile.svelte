@@ -57,6 +57,26 @@
 
   const updateProfile = (password) => {
     console.log(password);
+    if (
+      !name ||
+      !gender ||
+      !placeOfBirth ||
+      !dateOfBirth ||
+      !address ||
+      !profession ||
+      !institution ||
+      !phoneCode ||
+      !phoneNo
+    ) {
+      f7.dialog.alert("Please fill all field", "");
+      return;
+    }
+
+    if (!/^(0|[1-9][0-9]*)$/g.test(phoneNo)) {
+      f7.dialog.alert("Invalid phone number", "");
+      return;
+    }
+
     const data = {
       name,
       gender,
@@ -69,6 +89,7 @@
       phoneNo,
       isWhatsapp,
     };
+
     f7.dialog.confirm(
       `
     Name/Gender : <br>${name} / ${gender}<br><br>
@@ -90,6 +111,7 @@
   };
 
   var handleError = function (err) {
+    f7.dialog.alert(err, "Server timeout");
     console.warn(err);
   };
 
@@ -249,6 +271,8 @@
         floatingLabel
         type="text"
         placeholder="Phone Number"
+        validate
+        pattern="^(0|[1-9][0-9]*)$"
         bind:value={phoneNo}
       />
     </Col>

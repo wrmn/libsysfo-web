@@ -35,6 +35,7 @@
     "material-icons": "^1.11.1",
     "skeleton-elements": "^4.0.0",
     "svelte": "^3.48.0",
+    "svelte-pdf-simple": "^1.0.7",
     "svelte-scrolling": "^1.2.1",
     "swiper": "^8.2.2"
   },

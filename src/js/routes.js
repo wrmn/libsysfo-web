@@ -26,6 +26,7 @@ import PaperIndexPage from "../pages/paper/index.svelte";
 import PaperListPage from "../pages/paper/list.svelte";
 import PaperAccessPage from "../pages/paper/access.svelte";
 import PaperDetailPage from "../pages/paper/detail.svelte";
+import PaperReadPage from "../pages/paper/read.svelte";
 
 import DynamicRoutePage from "../pages/dynamic-route.svelte";
 
@@ -91,6 +92,10 @@ var routes = [
       {
         path: "detail/:paperId/",
         component: PaperDetailPage,
+      },
+      {
+        path: "read/:permissionId/",
+        component: PaperReadPage,
       },
     ],
   },

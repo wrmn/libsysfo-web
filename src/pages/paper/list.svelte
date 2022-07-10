@@ -32,6 +32,7 @@
 
   var handleError = function (err) {
     console.warn(err);
+    f7.dialog.alert(err, "Server timeout");
     dataResult.set(err.message);
   };
 

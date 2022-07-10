@@ -36,6 +36,7 @@
   var handleError = function (err) {
     console.warn(err);
     dataResult.set(err.message);
+    f7.dialog.alert(err, "Server timeout");
   };
 
   const getData = async (page = 1) => {

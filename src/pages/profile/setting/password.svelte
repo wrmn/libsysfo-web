@@ -7,6 +7,14 @@
       f7.dialog.alert("Incorrect Retype Password", "");
       return;
     }
+    if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,20}/g.test(pwd)) {
+      f7.dialog.alert(
+        "New password need have at least one capital letter, one small leter, one number and one symbol",
+        ""
+      );
+      return;
+    }
+
     const myHeaders = new Headers();
 
     myHeaders.append(
@@ -39,6 +47,7 @@
   };
 
   var handleError = function (err) {
+    f7.dialog.alert(err, "Server timeout");
     console.warn(err);
   };
 </script>
@@ -71,8 +80,6 @@
     bind:value={retypePwd}
     placeholder="Retype your password"
     clearButton
-    pattern={pwd}
-    validate
     errorMessage="Password doesn't match"
   >
     <Icon f7="lock_shield_fill" slot="media" />
