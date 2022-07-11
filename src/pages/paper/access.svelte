@@ -38,7 +38,6 @@
     );
     const response = await fetch(request).catch(handleError);
     const msg = await response.json();
-    console.log(msg);
     if (msg.data.permission) {
       permissionResult.set(msg.data.permission);
     }

@@ -97,14 +97,12 @@
                 <td class="label-cell">{p.subject}</td>
                 <td class="label-cell">{p.purpose}</td>
                 <td class="label-cell">
-                  {#if "accepted" in p}
-                    {#if p.accepted}
-                      <Badge textColor="black" color="green">Accepted</Badge>
-                    {:else}
-                      <Badge color="red" textColor="black">Rejected</Badge>
-                    {/if}
-                  {:else}
+                  {#if p.accepted == undefined}
                     <Badge color="yellow" textColor="black">Pending</Badge>
+                  {:else if p.accepted}
+                    <Badge textColor="black" color="green">Accepted</Badge>
+                  {:else}
+                    <Badge color="red" textColor="black">Rejected</Badge>
                   {/if}
                 </td>
                 <td class="label-cell">

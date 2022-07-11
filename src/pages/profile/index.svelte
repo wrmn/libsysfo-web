@@ -96,12 +96,12 @@
           </div>
 
           <Toolbar tabbar bottom>
-            <Link tabLink="#tab-1" tabLinkActive>Information</Link>
-            <Link tabLink="#tab-2">Borrow</Link>
-            <Link tabLink="#tab-3">Access</Link>
+            <Link tabLink="#tab-information" tabLinkActive>Information</Link>
+            <Link tabLink="#tab-borrow">Borrow</Link>
+            <Link tabLink="#tab-access">Access</Link>
           </Toolbar>
           <Tabs>
-            <Tab id="tab-1" tabActive>
+            <Tab id="tab-information" tabActive>
               <Card class="demo-card-header-pic">
                 <CardContent>
                   {#if $userResult.dateOfBirth}
@@ -181,10 +181,10 @@
                 </CardContent>
               </Card>
             </Tab>
-            <Tab id="tab-2">
+            <Tab id="tab-borrow">
               <BorrowPage />
             </Tab>
-            <Tab id="tab-3">
+            <Tab id="tab-access">
               <AccessPage />
             </Tab>
           </Tabs>

@@ -63,7 +63,6 @@
     const reqBody = {
       collectionId,
     };
-    console.log(JSON.stringify(reqBody));
 
     const myHeaders = new Headers();
 
@@ -170,11 +169,11 @@
       </span>
       <span slot="action">
         <Toolbar tabbar bottom>
-          <Link tabLink="#tab-1" tabLinkActive>Description</Link>
-          <Link tabLink="#tab-2">Collection</Link>
+          <Link tabLink="#tab-description" tabLinkActive>Description</Link>
+          <Link tabLink="#tab-collection">Collection</Link>
         </Toolbar>
         <Tabs>
-          <Tab id="tab-1" tabActive>
+          <Tab id="tab-description" tabActive>
             <Card class="demo-card-header-pic">
               <CardContent>
                 <div class="text-align-justify">
@@ -185,7 +184,7 @@
               </CardContent>
             </Card>
           </Tab>
-          <Tab id="tab-2">
+          <Tab id="tab-collection">
             <Card class="demo-card-header-pic">
               <CardContent>
                 {#if $bookResult.collection.length != 0}

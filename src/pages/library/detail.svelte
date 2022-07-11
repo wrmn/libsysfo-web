@@ -107,18 +107,18 @@
     <StandardHeader title={$libraryResult.name} />
   {/if}
   <Toolbar tabbar position="top">
-    <Link tabLink="#tab-1" tabLinkActive>Info</Link>
-    <Link tabLink="#tab-2">Gallery</Link>
-    <Link tabLink="#tab-3" on:click={resizes}>Location</Link>
+    <Link tabLink="#tab-info" tabLinkActive>Info</Link>
+    <Link tabLink="#tab-gallery">Gallery</Link>
+    <Link tabLink="#tab-location" on:click={resizes}>Location</Link>
   </Toolbar>
   <Tabs>
     {#if $libraryResult.length != 0}
-      <Tab id="tab-1" tabActive>
+      <Tab id="tab-info" tabActive>
         <Block strong>
           <Info data={$libraryResult} />
         </Block>
       </Tab>
-      <Tab id="tab-2">
+      <Tab id="tab-gallery">
         <Block strong>
           {#if $libraryResult.id}
             <Gallery photos={$libraryResult.imagesContent} />
@@ -126,7 +126,7 @@
         </Block>
       </Tab>
     {/if}
-    <Tab id="tab-3">
+    <Tab id="tab-location">
       <Block strong>
         <div class="map-wrap">
           <Map

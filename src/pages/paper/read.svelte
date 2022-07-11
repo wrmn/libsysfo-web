@@ -9,7 +9,7 @@
 </script>
 
 <Page>
-  <StandardHeader title="Book List" />
+  <StandardHeader title="Read" />
   <PdfViewer
     url={pathToPdf}
     httpHeaders={{

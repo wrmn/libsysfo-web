@@ -8,7 +8,6 @@
     Card,
     CardContent,
     Button,
-    Icon,
     Badge,
     Tab,
     Row,
@@ -56,6 +55,38 @@
       "https://pict.sindonews.net/dyn/620/pena/news/2020/12/05/207/257920/beberapa-cara-mudah-untuk-mengonversi-file-ke-pdf-jxi.jpg";
     paperResult.set(msg.data);
   };
+
+  const permissionRequest = async (requestPurpose) => {
+    const myHeaders = new Headers();
+
+    myHeaders.append(
+      "Authorization",
+      `Bearer ${localStorage.getItem("account-credential")}`
+    );
+    const reqBody = {
+      paperId: $paperResult.paper.id,
+      requestPurpose,
+    };
+
+    const request = new Request(
+      `${import.meta.env.VITE_SERVER_ADDRESS}/profile/permission/new`,
+      {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify(reqBody),
+      }
+    );
+    const response = await fetch(request).catch(handleError);
+    const msg = await response.json();
+
+    if (response.status != 200) {
+      f7.dialog.alert(msg.description, "Task Failed!");
+      return;
+    }
+    f7.dialog.alert(msg.description, "", () => {
+      f7.views.main.router.navigate("/paper/access/");
+    });
+  };
 </script>
 
 <Page>
@@ -76,32 +107,50 @@
         ? $paperResult.paper.image
         : "https://dummyimage.com/600x400/ababab/0011ff"}
     >
-      <span slot="name"> {$paperResult.paper.title}</span>
+      <span slot="name">
+        {#if $paperResult.paper.access}
+          <Badge color="green">Accessible</Badge>
+        {:else}
+          <Badge color="red">Not Accessible</Badge>
+        {/if}<br />{$paperResult.paper.title}</span
+      >
       <span slot="details">
-        <h5 class="text-align-center make-capital">
-          {$paperResult.paper.issn}
-        </h5>
         <h3 class="text-align-center make-capital">
-          {#each $paperResult.paper.subject as subj, i}
-            {#if i != $paperResult.paper.subject.length - 1}
-              {` ${subj}`}
-              {#if i != $paperResult.paper.subject.length - 2}
-                ,
-              {/if}
-            {:else}
-              {` & ${subj}`}
-            {/if}
-          {/each}
+          {$paperResult.paper.type}
         </h3>
+        {#each $paperResult.paper.subject as subj, i}
+          {#if i != $paperResult.paper.subject.length - 1}
+            {` ${subj}`}
+            {#if i != $paperResult.paper.subject.length - 2}
+              ,
+            {/if}
+          {:else}
+            {` & ${subj}`}
+          {/if}
+        {/each}<br />
         {@html $paperResult.paper.information}
+        {#if $paperResult.paper.access}
+          <Button
+            fill
+            on:click={() => {
+              f7.dialog.prompt(
+                "what is your purpose for accessing this document?",
+                "",
+                (purpose) => {
+                  permissionRequest(purpose);
+                }
+              );
+            }}>Request Access</Button
+          >
+        {/if}
       </span>
       <span slot="action">
         <Toolbar tabbar bottom>
-          <Link tabLink="#tab-1" tabLinkActive>Abstract</Link>
-          <Link tabLink="#tab-2">Library</Link>
+          <Link tabLink="#tab-abstract" tabLinkActive>Abstract</Link>
+          <Link tabLink="#tab-library">Library</Link>
         </Toolbar>
         <Tabs>
-          <Tab id="tab-1" tabActive>
+          <Tab id="tab-abstract" tabActive>
             <Card class="demo-card-header-pic">
               <CardContent>
                 <div class="text-align-justify">
@@ -110,7 +159,7 @@
               </CardContent>
             </Card>
           </Tab>
-          <Tab id="tab-2">
+          <Tab id="tab-library">
             <Card class="demo-card-header-pic">
               <CardContent>
                 <div class="text-align-justify">
@@ -118,8 +167,10 @@
                     <tr>
                       <td>name</td>
                       <td>
-                        <Link href={`/library/detail/${$paperResult.library.id}/`}>
-                        {$paperResult.library.name}
+                        <Link
+                          href={`/library/detail/${$paperResult.library.id}/`}
+                        >
+                          {$paperResult.library.name}
                         </Link>
                       </td>
                     </tr>

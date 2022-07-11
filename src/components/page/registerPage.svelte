@@ -10,18 +10,102 @@
     Button,
     LoginScreen,
   } from "framework7-svelte";
-  import { loginStats } from "../../stores/data";
+  import {
+    loginStats,
+    userResult,
+    permissionResult,
+    borrowResult,
+  } from "../../stores/data";
 
   export let registerScreenOpened = false;
-  let username = "";
-  let password = "";
+  let email, username, name, password, retypePassword;
 
-  function signIn() {
-    f7.dialog.alert(`Username: ${username}<br>Password: ${password}`, () => {
-      f7.loginScreen.close();
+  const getData = async () => {
+    userResult.set([]);
+    permissionResult.set([]);
+    borrowResult.set([]);
+    const myHeaders = new Headers();
+
+    myHeaders.append(
+      "Authorization",
+      `Bearer ${localStorage.getItem("account-credential")}`
+    );
+    const request = new Request(
+      `${import.meta.env.VITE_SERVER_ADDRESS}/profile`,
+      {
+        method: "GET",
+        headers: myHeaders,
+      }
+    );
+    const response = await fetch(request).catch(handleError);
+    const msg = await response.json();
+    userResult.set(msg.data.profile);
+    if (msg.data.permission) {
+      permissionResult.set(msg.data.permission);
+    }
+    if (msg.data.borrow) {
+      borrowResult.set(msg.data.borrow);
+    }
+  };
+
+  const register = async () => {
+    if (!name || !username) {
+      f7.dialog.alert("Please fill all field", "");
+      return;
+    }
+    if (
+      !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g.test(
+        email
+      )
+    ) {
+      f7.dialog.alert("Invalid email", "");
+      return;
+    }
+    if (password != retypePassword) {
+      f7.dialog.alert("Incorrect Retype Password", "");
+      return;
+    }
+    if (!/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,20}/g.test(password)) {
+      f7.dialog.alert(
+        "Password need have at least one capital letter, one small leter, one number and one symbol",
+        ""
+      );
+      return;
+    }
+
+    const reqBody = {
+      email,
+      username,
+      name,
+      password,
+      retypePassword,
+    };
+    const request = new Request(
+      `${import.meta.env.VITE_SERVER_ADDRESS}/profile/register`,
+      {
+        method: "POST",
+        body: JSON.stringify(reqBody),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const response = await fetch(request).catch(handleError);
+    const msg = await response.json();
+    if (msg.status != 200) {
+      f7.dialog.alert(msg.description, "Registration Failed");
+    } else {
+      localStorage.setItem("account-credential", msg.data.token);
       loginStats.set(true);
-    });
-  }
+      f7.loginScreen.close();
+      getData();
+    }
+  };
+
+  const handleError = (err) => {
+    f7.dialog.alert(err, "Server timeout");
+    console.warn(err);
+  };
 </script>
 
 <LoginScreen
@@ -57,40 +141,40 @@
             label="Email"
             type="email"
             placeholder="Your email"
-            value={username}
-            onInput={(e) => (username = e.target.value)}
+            bind:value={email}
           />
 
           <ListInput
             label="Name"
             type="text"
             placeholder="Your Name"
-            value={username}
-            onInput={(e) => (username = e.target.value)}
+            bind:value={name}
           />
           <ListInput
             label="Username"
             type="text"
             placeholder="Your username"
-            value={username}
-            onInput={(e) => (username = e.target.value)}
+            bind:value={username}
           />
           <ListInput
             label="Password"
             type="password"
             placeholder="Your Password"
-            value={username}
-            onInput={(e) => (username = e.target.value)}
+            bind:value={password}
           />
           <ListInput
             label="Password"
             type="password"
             placeholder="Retype Your password"
-            value={password}
-            onInput={(e) => (password = e.target.value)}
+            bind:value={retypePassword}
           />
         </List>
-        <Button fill onClick={signIn}>Register</Button>
+        <Button
+          fill
+          onClick={() => {
+            register();
+          }}>Register</Button
+        >
       </Col>
       <Col width="100" medium="20" />
     </Row>
