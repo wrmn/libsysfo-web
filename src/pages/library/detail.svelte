@@ -78,21 +78,6 @@
   function resizes() {
     mapComponent.resize();
   }
-
-  async function getDirection(meth) {
-    // NOTE: change this line for custom location
-    // loc.src = [80.46084726822548, -0.915438492909816];
-
-    const query = await fetch(
-      `https://api.mapbox.com/directions/v5/mapbox/${meth}/${loc.src[0]},${loc.src[1]};${loc.dst[0]},${loc.dst[1]}?steps=true&geometries=geojson&access_token=${mapboxToken}`,
-      { method: "GET" }
-    ).catch(handleError);
-
-    if (query.status != 200) {
-      return false;
-    }
-    return await query.json();
-  }
 </script>
 
 <Page>
@@ -136,12 +121,7 @@
             {center}
             bind:zoom
           >
-            <Direction
-              dirWalking={getDirection("walking")}
-              dirDriving={getDirection("driving")}
-              coords={loc}
-              bind:location
-            />
+            <Direction coords={loc} bind:location />
           </Map>
         </div>
       </Block>

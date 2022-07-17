@@ -1,5 +1,5 @@
 <script>
-  import { getContext } from "svelte";
+  import { getContext, onMount } from "svelte";
   import { contextKey } from "@beyonk/svelte-mapbox";
   import {
     f7,
@@ -15,8 +15,6 @@
   import Guide from "../map/_Guide.svelte";
 
   import * as turf from "@turf/turf";
-  export let dirWalking;
-  export let dirDriving;
   export let coords = {
     src: [0, 0],
     dst: [0, 0],
@@ -29,8 +27,6 @@
   const map = getMap();
   const mapbox = getMapbox();
 
-  const srcPoint = new mapbox.Marker().setLngLat(coords.src).addTo(map);
-  const dstPoint = new mapbox.Marker().setLngLat(coords.dst).addTo(map);
   function currentLocation() {
     map.flyTo({
       center: coords.src,
@@ -44,6 +40,12 @@
       zoom: 15,
     });
   }
+  onMount(() => {
+    setTimeout(function () {
+      const srcPoint = new mapbox.Marker().setLngLat(coords.src).addTo(map);
+      const dstPoint = new mapbox.Marker().setLngLat(coords.dst).addTo(map);
+    }, 2000);
+  });
 
   function measureZoom(distance) {
     let init = 0.149;
@@ -62,15 +64,34 @@
     return zoom;
   }
 
-  async function directions(meth) {
-    let data;
-    if (meth == "driving") {
-      data = await dirDriving;
-    } else if (meth == "walking") {
-      data = await dirWalking;
-    } else {
-      return;
+  var handleError = function (err) {
+    f7.dialog.alert(err, "Server timeout");
+    console.warn(err);
+  };
+
+  async function getDirection(meth) {
+    // NOTE: change this line for custom location
+    // loc.src = [80.46084726822548, -0.915438492909816];
+
+    const query = await fetch(
+      `https://api.mapbox.com/directions/v5/mapbox/${meth}/${coords.src[0]},${
+        coords.src[1]
+      };${coords.dst[0]},${
+        coords.dst[1]
+      }?steps=true&geometries=geojson&access_token=${
+        import.meta.env.VITE_MAPBOX_KEY
+      }`,
+      { method: "GET" }
+    ).catch(handleError);
+
+    if (query.status != 200) {
+      return false;
     }
+    return await query.json();
+  }
+
+  async function directions(meth) {
+    let data = await getDirection(meth);
 
     if (!data || data.routes.length == 0) {
       f7.dialog
@@ -136,18 +157,29 @@
   <List accordionList>
     <ListItem accordionItem title="Location">
       <AccordionContent>
-        <Button fill raised disabled={!location} on:click={() => currentLocation()}>My</Button>
+        <Button
+          fill
+          raised
+          disabled={!location}
+          on:click={() => currentLocation()}>My</Button
+        >
         <Button fill raised on:click={() => libraryLocation()}>Library</Button>
       </AccordionContent>
     </ListItem>
 
     <ListItem accordionItem title="Direction" disabled={!location}>
       <AccordionContent>
-        <Button fill raised on:click={() => directions("walking")} disabled={!location}
-          >walking</Button
+        <Button
+          fill
+          raised
+          on:click={() => directions("walking")}
+          disabled={!location}>walking</Button
         >
-        <Button fill raised on:click={() => directions("driving")} disabled={!location}
-          >driving</Button
+        <Button
+          fill
+          raised
+          on:click={() => directions("driving")}
+          disabled={!location}>driving</Button
         >
       </AccordionContent>
     </ListItem>
