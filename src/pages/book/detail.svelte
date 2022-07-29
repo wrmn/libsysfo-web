@@ -125,6 +125,14 @@
               </td>
             </tr>
             <tr>
+              <td class="label-cell">Release Date : </td>
+              <td class="label-cell">
+                {$bookResult.book.releaseDate
+                  ? $bookResult.book.releaseDate
+                  : "-"}
+              </td>
+            </tr>
+            <tr>
               <td class="label-cell">Page Total : </td>
               <td class="label-cell">
                 {$bookResult.book.pageCount ? $bookResult.book.pageCount : "-"}
@@ -208,8 +216,18 @@
                             >
                             <td class="label-cell">{a.sn}</td>
                             <td class="label-cell">
-                              <Badge color={a.availability ? "green" : "red"} />
-                              {a.availability ? "Tersedia" : "Tidak Tersedia"}
+                              <Badge
+                                color={a.availability == 1
+                                  ? "green"
+                                  : a.availability == 2
+                                  ? "blue"
+                                  : "red"}
+                              />
+                              {a.availability == 1
+                                ? "Tersedia"
+                                : a.availability == 2
+                                ? "Hanya baca"
+                                : "Tidak Tersedia"}
                             </td>
                             <td class="label-cell">
                               {#if a.status == 1}

@@ -1,6 +1,6 @@
 <script>
-  import { List, Button, f7 } from "framework7-svelte";
-  import { userResult, loginStats } from "../../../stores/data";
+  import { List, f7 } from "framework7-svelte";
+  import { userResult } from "../../../stores/data";
   let input;
   let container;
   let image;

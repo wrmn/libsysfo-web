@@ -39,6 +39,7 @@
     );
     const response = await fetch(request).catch(handleError);
     const msg = await response.json();
+    console.log(msg);
     if (msg.data.borrow) {
       borrowResult.set(msg.data.borrow);
     }

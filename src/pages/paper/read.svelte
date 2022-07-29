@@ -4,8 +4,9 @@
   import StandardHeader from "../../components/standardHeader.svelte";
 
   export let f7route;
-
-  const pathToPdf = `https://young-castle-31877.herokuapp.com/profile/permission/read/${f7route.params["permissionId"]}`;
+  // NOTE: Change when deploy
+  const pathToPdf = `http://localhost:5000/profile/permission/read/${f7route.params["permissionId"]}`;
+  // const pathToPdf = `https://young-castle-31877.herokuapp.com/profile/permission/read/${f7route.params["permissionId"]}`;
 </script>
 
 <Page>
