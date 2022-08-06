@@ -47,28 +47,32 @@
     </List>
     <List class="search-list searchbar-found">
       <List mediaList>
-        {#each $libraryResult.paper as paper}
-          <ListItem
-            link={`/paper/detail/${paper.id}/`}
-            title={paper.title}
-            text={paper.abstract}
-            header={infoGenerator(paper)}
-            popupClose
-            tooltip={infoGenerator(paper)}
-          >
-            <Badge
-              color={paper.access ? "green" : "red"}
-              tooltip="Akses Dari Libsysfo"
-              >{paper.access ? "Bisa Diakses" : "Tidak Bisa Diakses"}</Badge
+        {#if $libraryResult.paper}
+          {#each $libraryResult.paper as paper}
+            <ListItem
+              link={`/paper/detail/${paper.id}/`}
+              title={paper.title}
+              text={paper.abstract}
+              header={infoGenerator(paper)}
+              popupClose
+              tooltip={infoGenerator(paper)}
             >
-            <img
-              slot="media"
-              src="https://pict.sindonews.net/dyn/620/pena/news/2020/12/05/207/257920/beberapa-cara-mudah-untuk-mengonversi-file-ke-pdf-jxi.jpg"
-              width="80"
-              alt=""
-            />
-          </ListItem>
-        {/each}
+              <Badge
+                color={paper.access ? "green" : "red"}
+                tooltip="Akses Dari Libsysfo"
+                >{paper.access ? "Bisa Diakses" : "Tidak Bisa Diakses"}</Badge
+              >
+              <img
+                slot="media"
+                src="https://pict.sindonews.net/dyn/620/pena/news/2020/12/05/207/257920/beberapa-cara-mudah-untuk-mengonversi-file-ke-pdf-jxi.jpg"
+                width="80"
+                alt=""
+              />
+            </ListItem>
+          {/each}
+        {:else}
+          <h3>Library don't have any paper yet</h3>
+        {/if}
       </List>
     </List>
   </Page>

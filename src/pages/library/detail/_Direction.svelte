@@ -42,7 +42,14 @@
   }
   onMount(() => {
     setTimeout(function () {
-      const srcPoint = new mapbox.Marker().setLngLat(coords.src).addTo(map);
+      const srcPoint = new mapbox.Marker({ color: "#977560" })
+        .setPopup(
+          new mapbox.Popup().setHTML(
+            "<h1 style='color:black'>You are here!</h1>"
+          )
+        )
+        .setLngLat(coords.src)
+        .addTo(map);
       const dstPoint = new mapbox.Marker().setLngLat(coords.dst).addTo(map);
     }, 2000);
   });

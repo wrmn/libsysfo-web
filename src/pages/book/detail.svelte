@@ -18,7 +18,7 @@
   import { onMount, onDestroy } from "svelte";
   import MainCard from "../../components/card/mainCard.svelte";
   import StandardHeader from "../../components/standardHeader.svelte";
-  import { bookResult } from "../../stores/data";
+  import { bookResult, loginStats } from "../../stores/data";
 
   export let f7route;
   export let f7router;
@@ -242,7 +242,7 @@
                               {/if}
                             </td>
                             <td class="label-cell">
-                              {#if a.availability}
+                              {#if a.availability && $loginStats}
                                 <Button
                                   fill
                                   on:click={() => {

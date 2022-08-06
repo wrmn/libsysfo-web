@@ -124,7 +124,7 @@
     disabled={$userResult.verivied}
     floatingLabel
     bind:value={email}
-    info={$userResult.verivied ? "" : "Email not verivied yet"}
+    info={$userResult.verivied ? "Email has been verivied" : "Email not verivied yet"}
     placeholder="Your e-mail"
   >
     <i

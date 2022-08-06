@@ -44,6 +44,7 @@
                 />
                 Penagajuan
               </th>
+              <th class="label-cell" width={10}> Penanggapan </th>
               <th class="label-cell">
                 <Button
                   iconF7="arrow_up_arrow_down"
@@ -90,23 +91,31 @@
           <tbody>
             {#each $permissionResult as p}
               <tr>
-                <td class="label-cell"
-                  >{isoToDmy(p.createdAt, "dd-mmmm-yyyy hh:MM")}</td
+                <td>{isoToDmy(p.createdAt, "dd-mmmm-yyyy hh:MM")}</td>
+
+                <td
+                  >{p.acceptedAt || p.canceledAt
+                    ? isoToDmy(
+                        p.acceptedAt ? p.acceptedAt : p.canceledAt,
+                        "dd-mmmm-yyyy hh:MM"
+                      )
+                    : "-"}</td
                 >
-                <td class="label-cell">{p.title}</td>
-                <td class="label-cell">{p.subject}</td>
-                <td class="label-cell">{p.purpose}</td>
-                <td class="label-cell">
-                  {#if p.accepted == undefined}
-                    <Badge color="yellow" textColor="black">Pending</Badge>
-                  {:else if p.accepted}
-                    <Badge textColor="black" color="green">Accepted</Badge>
-                  {:else}
-                    <Badge color="red" textColor="black">Rejected</Badge>
-                  {/if}
+                <td>{p.title}</td>
+                <td>{p.subject}</td>
+                <td>{p.purpose}</td>
+                <td>
+                  <Badge
+                    textColor="black"
+                    color={p.status == "accepted"
+                      ? "green"
+                      : p.status == "canceled"
+                      ? "red"
+                      : "yellow"}>{p.status}</Badge
+                  >
                 </td>
-                <td class="label-cell">
-                  {#if p.accepted}
+                <td>
+                  {#if p.acceptedAt}
                     <Button href={`/paper/read/${p.id}/`}>Read</Button>
                   {/if}
                 </td>

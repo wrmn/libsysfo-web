@@ -18,7 +18,7 @@
     userResult,
     borrowResult,
   } from "../../stores/data";
-  import { isoToDmy } from "../../js/util";
+  import { isoToDmy, logout } from "../../js/util";
 
   import AccessPage from "../../components/page/accessPage.svelte";
   import BorrowPage from "../../components/page/borrowPage.svelte";
@@ -54,12 +54,19 @@
     );
     const response = await fetch(request).catch(handleError);
     const msg = await response.json();
-    userResult.set(msg.data.profile);
-    if (msg.data.permission) {
-      permissionResult.set(msg.data.permission);
-    }
-    if (msg.data.borrow) {
-      borrowResult.set(msg.data.borrow);
+    if (msg.status == 200) {
+      userResult.set(msg.data.profile);
+      if (msg.data.permission) {
+        permissionResult.set(msg.data.permission);
+      }
+      if (msg.data.borrow) {
+        borrowResult.set(msg.data.borrow);
+      }
+    } else {
+      f7.dialog.alert(msg.description, "logging out user", () => {
+        localStorage.removeItem("account-credential");
+        window.location.reload();
+      });
     }
   };
 
@@ -114,7 +121,7 @@
                             {#if $userResult.username}
                               {$userResult.username}
                             {:else}
-                            <a href="/profile/settings/"> Set username</a>
+                              <a href="/profile/settings/"> Set username</a>
                             {/if}
                           </td>
                         </tr>

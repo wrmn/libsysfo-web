@@ -56,7 +56,12 @@
   const locationSuccess = (position) => {
     location = true;
     src = [position.coords.longitude, position.coords.latitude];
-    srcPoint = new mapbox.Marker().setLngLat(src).addTo(map);
+    srcPoint = new mapbox.Marker({ color: "#977560" })
+      .setPopup(
+        new mapbox.Popup().setHTML("<h1 style='color:black'>You are here!</h1>")
+      )
+      .setLngLat(src)
+      .addTo(map);
   };
 
   const locationError = (error) => {
@@ -73,9 +78,9 @@
 
   // NOTE: Marker
   const markerData = async () => {
-    const response = await fetch(`${import.meta.env.VITE_SERVER_ADDRESS}/library`).catch(
-      handleError
-    );
+    const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ADDRESS}/library`
+    ).catch(handleError);
     const msg = await response.json();
     msg.data.library.forEach((e) => {
       resolveData.push({

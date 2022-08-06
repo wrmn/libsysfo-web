@@ -3,6 +3,8 @@
   import { getDevice } from "framework7/lite-bundle";
   import {
     f7,
+    Popup,
+    Link,
     f7ready,
     App,
     Panel,
@@ -16,14 +18,19 @@
     ListItem,
   } from "framework7-svelte";
   import cordovaApp from "../js/cordova-app";
+  import { getNotification, readNotification } from "../js/api";
+  import { checkLogin, isoToDmy } from "../js/util";
 
   import routes from "../js/routes";
-  import store from "../js/store";
+  import store, { notificationCount, notification } from "../js/store";
 
   import { darkTheme, mainMenu } from "../stores/main";
   import { switchTheme } from "../js/util";
+  import { loginStats } from "../stores/data";
 
   const device = getDevice();
+
+  let popupOpened = false;
   // Framework7 Parameters
   let f7params = {
     name: "Library Information System", // App name
@@ -55,6 +62,13 @@
   };
 
   onMount(() => {
+    if (localStorage.getItem("account-credential")) {
+      loginStats.set(checkLogin());
+      getNotification();
+    }
+    setInterval(function () {
+      getNotification();
+    }, 5000);
     f7ready(() => {
       // Init cordova APIs (see cordova-app.js)
       if (f7.device.cordova) {
@@ -87,12 +101,56 @@
 </svelte:head>
 
 <App {...f7params}>
+  <Popup
+    class="demo-popup"
+    opened={popupOpened}
+    onPopupClosed={() => (popupOpened = false)}
+  >
+    <Page>
+      <Navbar title="Notification">
+        <NavRight>
+          <Button
+            on:click={() => {
+              readNotification();
+            }}>read all</Button
+          >
+          <Link iconF7="xmark" popupClose />
+        </NavRight>
+      </Navbar>
+      <List mediaList>
+        <Button
+          fill
+          iconF7="arrow_clockwise_circle"
+          tooltip="refresh"
+          onClick={getNotification()}
+        />
+        {#if $notification && $notification.data && $notification.data.notification}
+          {#each $notification.data.notification as n}
+            <ListItem
+              after={isoToDmy(n.CreatedAt, "dd-mm-yyyy hh:MM:ss")}
+              text={n.message}
+            />
+          {/each}
+        {/if}
+      </List>
+    </Page>
+  </Popup>
+
   <Panel left cover visibleBreakpoint={1280}>
     <View>
       <Page>
         <Navbar title="Menu">
           <NavRight>
-            <Button
+            <Link
+              iconF7="bell"
+              badge={$notificationCount}
+              badgeColor="red"
+              on:click={() => {
+                popupOpened = true;
+              }}
+            />
+
+            <Link
               on:click={() => {
                 switchTheme();
                 darkTheme.set(!$darkTheme);
@@ -105,8 +163,7 @@
                   moon
                 {/if}
               </i>
-              <!-- moon -->
-            </Button>
+            </Link>
           </NavRight>
         </Navbar>
         {#each $mainMenu as child}

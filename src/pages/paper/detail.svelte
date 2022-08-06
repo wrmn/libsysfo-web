@@ -16,7 +16,7 @@
   import { onMount, onDestroy } from "svelte";
   import MainCard from "../../components/card/mainCard.svelte";
   import StandardHeader from "../../components/standardHeader.svelte";
-  import { paperResult } from "../../stores/data";
+  import { loginStats, paperResult } from "../../stores/data";
 
   export let f7route;
   export let f7router;
@@ -129,7 +129,7 @@
           {/if}
         {/each}<br />
         {@html $paperResult.paper.information}
-        {#if $paperResult.paper.access}
+        {#if $paperResult.paper.access && $loginStats}
           <Button
             fill
             on:click={() => {
